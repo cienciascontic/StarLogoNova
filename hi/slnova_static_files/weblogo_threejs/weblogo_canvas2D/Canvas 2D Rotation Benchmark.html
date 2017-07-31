@@ -1,0 +1,351 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+ 
+ 
+ 
+ 
+<head> 
+ 
+	<title>Benchmark - HTML &amp; JavaScript</title> 
+ 
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" /> 
+	<meta name="author" content="The Man in Blue" /> 
+	<meta name="robots" content="all" /> 
+	<meta name="MSSmartTagsPreventParsing" content="true" /> 
+	<meta name="description" content="" /> 
+	<meta name="keywords" content="" /> 
+ 
+	<style type="text/css"> 
+	
+	html
+	{
+		height: 100%;
+	}
+	
+	body
+	{
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		margin: 0;
+		padding: 0;
+	}
+	
+	span
+	{
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		overflow: hidden;
+		-webkit-border-radius: 0px;
+		-moz-border-radius: 0px;
+		background-color: #000000;
+	}
+	
+	.shadows span
+	{
+		-webkit-box-shadow: 4px 4px 3px rgba(0,0,0,0.33);
+		-moz-box-shadow: 4px 4px 3px rgba(0,0,0,0.33);
+	}
+	
+	#frameRate
+	{
+		position: absolute;
+		right: 10px;
+		bottom: 10px;
+		z-index: 100;
+		font-size: 25px;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	
+	#controls
+	{
+		position: absolute;
+		left: 10px;
+		top: 10px;
+		z-index: 100;
+		font-size: 15px;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	
+	</style> 
+
+	<script type="text/javascript" src="ModelLoader.js"></script>
+	<script type="text/javascript" src="Model.js"></script>
+	<script type="text/javascript" src="ModelManager.js"></script>
+	<script type="text/javascript" src="Terrain.js"></script>
+	<script type="text/javascript" src="Camera.js"></script>
+	<script type="text/javascript" src="Viewport.js"></script>
+	<script type="text/javascript"> 
+	
+	// Mock agent controller class:
+	function AgentControllerConstructor () 
+	{
+		this.agentList = [];
+		this.getAllAgentsToRender = function () { return this.agentList; };
+	}
+			
+	// Mock Execution class:
+	function ExecutionConstructor ()
+	{
+		this.AgentController = new AgentControllerConstructor();
+	}
+	var Execution =  new ExecutionConstructor();
+ 
+	var ROTATE = true;
+	var ROTATION = 13.315;
+	var GRANULARITY = 32;
+	var MATRICES = false;
+	var MAX_PARTICLES = 1000;
+	var MAX_VELOCITY = 500;
+	var PARTICLE_SIZE = 12;
+	var STAGE_WIDTH = 1024;
+	var STAGE_HEIGHT = 768;
+	var COLORS = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0], [1.0, 1.0, 0.0], [0.0, 1.0, 1.0], [1.0, 0.0, 1.0]];
+	var FRAME_TIMES = [];
+	var startPoint = -1;
+	var framesRun = 0;
+	var SP500F = 0;
+	
+	// var particles = [];
+	var context = null;
+	
+	window.onload = init;
+	
+	function init()
+	{
+		var location = window.location.href;
+		
+		// If shadows are turned on
+		if (location.match(/shadows=true/))
+		{
+			document.body.className = "shadows";
+		}
+		
+		// If max_particles is specified
+		if (location.match(/particles=/))
+		{
+			var maxParticles = location.match(/particles=([^&]+)/)[1];
+			maxParticles = parseInt(maxParticles);
+			
+			if (!isNaN(maxParticles))
+			{
+				MAX_PARTICLES = maxParticles;
+			}
+		}
+		
+		STAGE_WIDTH = document.body.offsetWidth;
+		STAGE_HEIGHT = document.body.offsetHeight;
+		
+		// Create the div for the canvas.
+		var benchmark = document.getElementById("benchmark");
+		benchmark.style.width = STAGE_WIDTH+"px";
+		benchmark.style.height = STAGE_HEIGHT+"px";
+		
+		// Create the particles
+		for (var i = 0; i < MAX_PARTICLES; i++)
+		{
+			Execution.AgentController.agentList.push(new Particle());
+		}
+	
+		var renderer = new Viewport("benchmark");
+			
+		renderer.enableTerrain(false);
+		renderer.enableZOrdering(false);
+		renderer.enableCanvasRotationMatrices(MATRICES);
+		renderer.setClearColor("white");
+		renderer.setRotationGranularity(GRANULARITY);
+		renderer.camera.moveTo(0, 0, 1500);
+			
+		renderer.setAnimationCallback(animate);
+		
+		document.testButtons.modes[0].checked = true;
+		
+		// Start the animation
+		renderer.animate();
+	}
+	
+	function resetTiming()
+	{
+		framesRun = 0;
+		startPoint = -1;
+		SP500F = 0;
+		frameTimes = [];
+	}
+	
+	function animate()
+	{
+		// Limit the frame time array to the last 60 frames
+		if (FRAME_TIMES.length > 60)
+		{
+			FRAME_TIMES.splice(0, 1);
+		}
+		
+		var currTime = new Date().getTime();
+		
+		FRAME_TIMES.push(currTime);
+		
+		if (startPoint < 0)
+		{
+			startPoint = currTime;
+		}
+		
+		framesRun++;
+		
+		if (framesRun >= 500)
+		{
+			SP500F = currTime - startPoint;
+			startPoint = -1;
+			framesRun = 0;
+		}
+		
+		// Calculate the framerate based upon the difference between the absolute times of the oldest and newest frames, subdivided by how many frames were drawn inbetween
+		var frameRate = document.getElementById("frameRate");
+		var frameRateText = 1000 / ((currTime - FRAME_TIMES[0]) / (FRAME_TIMES.length - 1)) + "";
+		frameRateText = frameRateText.replace(/(^[^.]+\...).*/, "$1");
+		frameRateText += (" FPS, " + SP500F/1000.0 + " SP500F");
+		frameRate.innerHTML = frameRateText;
+		
+		var timeDelta = currTime - FRAME_TIMES[FRAME_TIMES.length - 2];
+		
+		if (isNaN(timeDelta))
+		{
+			timeDelta = 0;
+		}
+		
+		// Animate each particle
+		var draw = !document.testButtons.modes[1].checked;
+		for (var particle in Execution.AgentController.agentList)
+		{
+			Execution.AgentController.agentList[particle].calculate(timeDelta);
+		}
+	}
+	
+	function Particle()
+	{
+		this.angle = Math.PI * 2 * Math.random();
+		this.velocity = MAX_VELOCITY / 8 * 7 * Math.random() + MAX_VELOCITY / 8;
+		this.translate = [0, 0, 0];
+		this.scale = [PARTICLE_SIZE, PARTICLE_SIZE, PARTICLE_SIZE];
+		if (ROTATE)
+			this.rotate = [0, Math.random() * 360, 0];
+		else
+			this.rotate = [0, 0, 0];
+		this.shape = "obj/Square.jpg";
+		this.color = COLORS[0];
+	}
+	
+	Particle.prototype.calculate = function(timeDelta)
+		{
+			var nextX = this.translate[0] + .06;
+			var nextY = this.translate[1];
+			var angle = this.angle;
+			
+			if (/*!document.testButtons.modes[2].checked*/true) {
+				// Calculate next position of particle
+				nextX = this.translate[0] + Math.cos(angle) * this.velocity * (timeDelta / 1000);
+				nextY = this.translate[1] + Math.sin(angle) * this.velocity * (timeDelta / 1000);
+				
+				// If particle is going to move off right side of screen
+				if (nextX + PARTICLE_SIZE/2 > STAGE_WIDTH/2)
+				{
+					// If angle is between 3 o'clock and 6 o'clock
+					if ((angle >= 0 && angle < Math.PI / 2))
+					{
+						angle = Math.PI - angle;
+					}
+					// If angle is between 12 o'clock and 3 o'clock
+					else if (angle > Math.PI / 2 * 3)
+					{
+						angle = angle - (angle - Math.PI / 2 * 3) * 2
+					}
+				}
+				
+				// If particle is going to move off left side of screen
+				if (nextX - PARTICLE_SIZE/2 < -STAGE_WIDTH/2)
+				{
+					// If angle is between 6 o'clock and 9 o'clock
+					if ((angle > Math.PI / 2 && angle < Math.PI))
+					{
+						angle = Math.PI - angle;
+					}
+					// If angle is between 9 o'clock and 12 o'clock
+					else if (angle > Math.PI && angle < Math.PI / 2 * 3)
+					{
+						angle = angle + (Math.PI / 2 * 3 - angle) * 2
+					}
+				}
+				
+				// If particle is going to move off bottom side of screen
+				if (nextY + PARTICLE_SIZE/2 > STAGE_HEIGHT/2)
+				{
+					// If angle is between 3 o'clock and 9 o'clock
+					if ((angle > 0 && angle < Math.PI))
+					{
+						angle = Math.PI * 2 - angle;
+					}
+				}
+				
+				// If particle is going to move off top side of screen
+				if (nextY - PARTICLE_SIZE/2 < -STAGE_HEIGHT/2)
+				{
+					// If angle is between 9 o'clock and 3 o'clock
+					if ((angle > Math.PI && angle < Math.PI * 2))
+					{
+						angle = angle - (angle - Math.PI) * 2;
+					}
+				}
+			}
+			
+			this.angle = angle;
+			this.translate[0] = nextX;
+			this.translate[1] = nextY;
+		}
+		
+
+	
+	function setParticles() {
+		//If new value is greater, make additional particles
+		if (parseInt(document.particleField.particles.value) > MAX_PARTICLES) {
+			for (var i = 0; i < parseInt(document.particleField.particles.value) - MAX_PARTICLES; i++) {
+				Execution.AgentController.agentList.push(new Particle());
+			}
+		}
+		else {
+			for (var j = 0; j < MAX_PARTICLES - parseInt(document.particleField.particles.value); j++) {
+				Execution.AgentController.agentList.pop();
+			}
+		}
+		
+		MAX_PARTICLES = document.particleField.particles.value;
+		
+		resetTiming()
+	}
+ 
+	</script> 
+</head> 
+ 
+ 
+ 
+ 
+<body> 
+	<div id="benchmark" style="border: none; width: 1024px; height: 768px;"> </div>
+	<div style="z-index: 1000;" id="controls"> 
+		<form name="testButtons"> 
+	        <input type="radio" name="modes" value="All" onClick="resetTiming()" />All<br /> 
+	        <input type="radio" name="modes" value="Calculate" onClick="resetTiming()"/>Calculate<br /> 
+	        <input type="radio" name="modes" value="Draw" onClick="resetTiming()"/>Draw<br /> 
+	    </form> 
+	    <form name=particleField> 
+			<input name=particles value=1000 type=text onClick="setParticles()" > 
+		</form> 
+	</div> 
+	<div style="z-index: 1000;" id="frameRate"> 
+	</div> 
+</body> 
+ 
+ 
+ 
+ 
+</html> 

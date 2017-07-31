@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+
+    <script src="lib/three.min.js"></script>
+    <script src="lib/stats.min.js"></script>
+	<script src="lib/jquery-1.11.3.min.js"></script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+        precision highp float;
+        
+        uniform mat4 modelMatrix; 
+        uniform mat4 modelViewMatrix; 
+        uniform mat4 projectionMatrix; 
+        
+        attribute vec3 position;
+        attribute vec3 scale;
+        attribute vec4 orientation;
+        attribute vec3 offset;
+        attribute vec3 normal;
+        attribute vec2 uv;
+		
+        attribute vec3 color;
+
+        varying vec2 vUv;
+        varying vec3 vPosition;
+        varying vec3 vColor;
+        varying vec3 vNormal;
+
+        void main()	{
+
+            vec3 vPosition = position*scale;
+            vec3 vcV = cross(orientation.xyz, vPosition);
+            vPosition = vcV * (2.0 * orientation.w) + (cross(orientation.xyz, vcV) * 2.0 + vPosition);
+            vPosition += offset;
+            
+            vNormal = normal;
+            vec3 vcN = cross(orientation.xyz, normal);
+            vNormal = vcN * (2.0 * orientation.w) + (cross(orientation.xyz, vcN) * 2.0 + vNormal);
+            vec4 mcN = modelMatrix*vec4(vNormal, 1.0);
+            vNormal = mcN.xyz;
+            
+            vColor = color;
+            vUv = uv;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( vPosition, 1.0 );
+
+        }
+
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        precision highp float;
+
+        varying vec2 vUv;
+        varying vec3 vPosition;
+        varying vec3 vColor;
+        varying vec3 vNormal;
+
+        uniform int hasTex;
+        uniform sampler2D tex;
+        
+        void main()	{
+
+            vec3 light = vec3( 5.0, -100.0, 200.0 );
+            float intensity = max( 0.0, dot(normalize(vNormal.xyz), normalize(light)) );
+            vec3 color = vColor*(intensity*0.8+0.2);
+            if (hasTex == 1) {
+              color = texture2D(tex, vUv).xyz*color; // add texture
+            }
+            gl_FragColor = vec4(color, 1.0);
+
+        }
+
+    </script>
+	
+    <script src="lib/OrbitControls.js"></script>
+    <script src="lib/MTLLoader.js"></script>
+    <script src="lib/StarlogoLoader.js"></script>
+    <script src="lib/OBJMTLLoader.js"></script>
+    <script src="lib/OBJLoader.js"></script>
+    <script src="lib/ColladaLoader.js"></script>
+	
+    <script src="ModelManager.js"></script>
+    <script src="ShapeModel.js"></script>
+    <script src="FileModel.js"></script>
+    <script src="Terrain.js"></script>
+    <script src="Viewport.js"></script>
+    
+    <script src="index.js"></script>
+	
+    <div id="container"></div>
+</body>
+
+
+
+</html>
