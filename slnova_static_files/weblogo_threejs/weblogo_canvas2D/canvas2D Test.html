@@ -1,0 +1,329 @@
+<html>
+	<head>
+		<title>Canvas2D Test</title>
+		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+		<script type="text/javascript" src="../lib/stats.min.js"></script>
+		<script type="text/javascript" src="../lib/three.min.js"></script>
+		<script type="text/javascript" src="CameraControls.js"></script>
+		<script type="text/javascript" src="ModelLoader.js"></script>
+		<script type="text/javascript" src="Model.js"></script>
+		<script type="text/javascript" src="ModelManager.js"></script>
+		<script type="text/javascript" src="Camera.js"></script>
+		<script type="text/javascript" src="../Terrain.js"></script>
+		<script type="text/javascript" src="Viewport.js"></script>
+		
+		<script type="text/javascript">
+			// Mock agent controller class:
+			function AgentControllerConstructor () 
+			{
+				this.agentList = [];
+				this.getAllAgentsToRender = function () { return this.agentList; };
+			}
+
+			// Mock Engine class:
+			function EngineConstructor ()
+			{
+				this.tick = function () { return true; }
+			}
+			
+			// Mock Execution class:
+			function ExecutionConstructor ()
+			{
+				this.AgentController = new AgentControllerConstructor();
+				this.Engine = new EngineConstructor();
+			}
+			var Execution =  new ExecutionConstructor();
+		
+			// Mock Agent class:
+			
+			// x: The starting x location of the Agent in world space, must be a Number.
+			// y: The starting y location of the Agent in world space, must be a Number.
+			// z: The starting z location of the Agent in world space, must be a Number.
+			// size: The bounding size of the Agent in world space, must be a Number.
+			// heading: An angle in degrees representing which way the agent is facing. 
+			// image: A CanvasImageSource used to visually represent the Agent. May be 
+			// 		null or undefined to use default Agent appearance. 
+			function Agent(x, y, z, size, heading, color, image)
+			{
+				this.x = x;
+				this.y = y;
+				this.z = z;
+				this.size = size;
+				this.heading = heading;
+				this.color = color;
+				this.shape = image;
+			}
+			
+			// newX: New x location in world space to move the Agent to. May be null or undefined to 
+			// 		indicate to keep the Agent's old x location. Otherwise must be a Number. 
+			// newY: New y location in world space to move the Agent to. May be null or undefined to 
+			// 		indicate to keep the Agent's old y location. Otherwise must be a Number. 
+			// newZ: New z location in world space to move the Agent to. May be null or undefined to 
+			// 		indicate to keep the Agent's old z location. Otherwise must be a Number. 
+			/*
+			 * Moves the Agent to the specified new location in world space. 
+			 */
+			Agent.prototype.moveTo = function (newX, newY, newZ)
+			{
+				if (newX)
+					this.x = newX;
+				if (newY)
+					this.y = newY;
+				if (newZ)
+					this.z = newZ;
+			}
+			
+			// newHeading: New heading to update agent to in degrees.
+			Agent.prototype.rotateTo = function (newHeading)
+			{
+				this.heading = newHeading;
+			}
+			
+			
+			// Sprites
+			var AGENT0_SPRITE = "obj/Debug Sprite Link.png";
+			var AGENT1_SPRITE = "obj/Debug Sprite Metroid.png";
+			var TERRAIN_IMAGE = "obj/Debug Water Terrain.jpg";
+			
+			
+			// Main function that is called onload for body and tests renderer. 
+			var DIV_ID = "div";
+			var FOV = 90;
+			var NEAR = 10;
+			var FAR = 1000;
+			var agentList = [];
+			var canvasRenderer;
+			
+			var animatedAgent = new Agent(0, 50, 0, 25, 0, 0x0000FF, AGENT1_SPRITE);
+			
+			function testRenderer() 
+			{
+				canvasRenderer = new Viewport(DIV_ID);
+				
+				for (var i = 0; i < 10; i++)
+				{
+					Execution.AgentController.agentList.push(new Agent(-40*Math.random(), 40*Math.random(), 40*Math.random(), 
+						25, 360*Math.random(), 0xFFFFFF, AGENT0_SPRITE));
+					Execution.AgentController.agentList.push(new Agent(40*Math.random(), 40*Math.random(), 40*Math.random(), 
+						25, 360*Math.random(), 0xFFFFFF, AGENT0_SPRITE));
+					Execution.AgentController.agentList.push(new Agent(-40*Math.random(), -40*Math.random(), 40*Math.random(), 
+						25, 360*Math.random(), 0xFFFFFF, AGENT0_SPRITE));
+					Execution.AgentController.agentList.push(new Agent(40*Math.random(), -40*Math.random(), 40*Math.random(), 
+						25, 360*Math.random(), 0xFFFFFF, AGENT0_SPRITE));
+				}
+				
+				Execution.AgentController.agentList.push(new Agent(0, 0, 50, 25, 0, 0xFF0000, AGENT0_SPRITE));
+				Execution.AgentController.agentList.push(animatedAgent);
+
+				canvasRenderer.setAgentStates(Execution.AgentController.agentList);
+
+				canvasRenderer.setCameraAgent(Execution.AgentController.agentList[Execution.AgentController.agentList.length-1]);
+
+				canvasRenderer.setExecRate(60);
+					
+				canvasRenderer.animate();
+				
+				document.addEventListener('keydown', onKeyDown);
+				document.addEventListener('keyup', onKeyUp);
+
+				setInterval(onAnimate, 10);
+			}
+			
+			
+			// Animates.
+			var Y_SPEED = 100*0.1; // World space units per second.
+			var Z_SPEED = 130*0.1; // World space units per second.
+			var lastTime = 0; // Time of last execution of frame.
+			var deltaT = 0; // Elapsed time between frames.
+			var up = true; // Animate object up?
+			function onAnimate()
+			{
+				var timeNow = Date.now();
+				if (lastTime != 0) 
+					deltaT = timeNow - lastTime;
+				lastTime = timeNow;
+				
+				if (animatedAgent.y > 100*0.6)
+					up = true;
+				if (animatedAgent.y < 100*0.1)
+					up = false;
+				var newY; 
+				var newZ;
+				if (!up)
+				{
+					newY = animatedAgent.y + Y_SPEED*deltaT/1000;
+					newZ = animatedAgent.z - Z_SPEED*deltaT/1000;
+				}
+				else
+				{
+					newY = animatedAgent.y - Y_SPEED*deltaT/1000;
+					newZ = animatedAgent.z + Z_SPEED*deltaT/1000;
+				}
+					
+				animatedAgent.moveTo(null, newY, newZ);
+				animatedAgent.rotateTo(animatedAgent.heading + deltaT/100);
+			}
+			
+			
+			// Callbacks for html input.
+			function toggleZOrdering() 
+			{
+				var toggleOn = document.getElementById("toggleZOrdering").checked;
+				
+				if (canvasRenderer)
+					canvasRenderer.enableZOrdering(toggleOn);
+			}
+			
+			
+			
+			// Camera movement.
+			var CAMERA_DELAY = 250;
+			
+			function onKeyDown(event) 
+			{
+				if (event.keyCode == 38) // Up arrow.
+					beginUp();
+				if (event.keyCode == 40) // Down arrow.
+					beginDown();
+				if (event.keyCode == 37) // Left arrow.
+					beginLeft();
+				if (event.keyCode == 39) // Right arrow.
+					beginRight();
+				if (event.keyCode == 87) // W key.
+					beginIn();
+				if (event.keyCode == 83) // S key.
+					beginOut();
+				if (event.keyCode == 65) // A key.
+					beginCCW();
+				if (event.keyCode == 68) // D key.
+					beginCW();
+			}
+			
+			function onKeyUp(event) 
+			{
+				if (event.keyCode == 38) // Up arrow.
+					endUp();
+				if (event.keyCode == 40) // Down arrow.
+					endDown();
+				if (event.keyCode == 37) // Left arrow.
+					endLeft();
+				if (event.keyCode == 39) // Right arrow.
+					endRight();
+				if (event.keyCode == 87) // W key.
+					endIn();
+				if (event.keyCode == 83) // S key.
+					endOut();
+				if (event.keyCode == 65) // A key.
+					endCCW();
+				if (event.keyCode == 68) // D key.
+					endCW();
+			}
+			
+			function zoomIn()
+			{
+				if (zoomInHeld)
+				{	
+					canvasRenderer.camera.moveBy(0, 0, -1.0);
+					setTimeout(zoomIn, CAMERA_DELAY);
+				}
+			}
+			function beginIn() { zoomInHeld = true; zoomIn(); }
+			function endIn() {  zoomInHeld = false; }
+			var zoomInHeld = false;
+			
+			function zoomOut()
+			{
+				if (zoomOutHeld)
+				{	
+					canvasRenderer.camera.moveBy(0, 0, 1.0);
+					setTimeout(zoomOut, CAMERA_DELAY);
+				}
+			}
+			function beginOut() { zoomOutHeld = true; zoomOut(); }
+			function endOut() {  zoomOutHeld = false; }
+			var zoomOutHeld = false;
+			
+			function moveLeft()
+			{
+				if (moveLeftHeld)
+				{	
+					canvasRenderer.camera.moveBy(-1.0, 0, 0);
+					setTimeout(moveLeft, CAMERA_DELAY);
+				}
+			}
+			function beginLeft() { moveLeftHeld = true; moveLeft(); }
+			function endLeft() {  moveLeftHeld = false; }
+			var moveLeftHeld = false;
+			
+			function moveRight()
+			{
+				if (moveRightHeld)
+				{
+					canvasRenderer.camera.moveBy(1.0, 0, 0);
+					setTimeout(moveRight, CAMERA_DELAY);
+				}
+			}
+			function beginRight() { moveRightHeld = true; moveRight(); }
+			function endRight() {  moveRightHeld = false; }
+			var moveRightHeld = false;
+			
+			function moveUp()
+			{
+				if (moveUpHeld)
+				{
+					canvasRenderer.camera.moveBy(0, 1.0, 0);
+					setTimeout(moveUp, CAMERA_DELAY);
+				}
+			}
+			function beginUp() { moveUpHeld = true; moveUp(); }
+			function endUp() {  moveUpHeld = false; }
+			var moveUpHeld = false;
+			
+			function moveDown()
+			{
+				if (moveDownHeld)
+				{
+					canvasRenderer.camera.moveBy(0, -1.0, 0);
+					setTimeout(moveDown, CAMERA_DELAY);
+				}
+			}
+			function beginDown() { moveDownHeld = true; moveDown(); }
+			function endDown() {  moveDownHeld = false; }
+			var moveDownHeld = false;
+			
+			function rotCCW()
+			{
+				if (rotCCWHeld)
+				{
+					canvasRenderer.camera.rotateBy(0, 0, 0.05);
+					setTimeout(rotCCW, CAMERA_DELAY);
+				}
+			}
+			function beginCCW() { rotCCWHeld = true; rotCCW(); }
+			function endCCW() {  rotCCWHeld = false; }
+			var rotCCWHeld = false;
+			
+			function rotCW()
+			{
+				if (rotCWHeld)
+				{
+					canvasRenderer.camera.rotateBy(0, 0, -0.05);
+					setTimeout(rotCW, CAMERA_DELAY);
+				}
+			}
+			function beginCW() { rotCWHeld = true; rotCW(); }
+			function endCW() {  rotCWHeld = false; }
+			var rotCWHeld = false;
+			
+			
+		</script>
+	</head>
+	
+	<body onload="testRenderer();">
+		<div id="div" style="border: none; width: 50%; height: 50%;"> </div>
+		<input type="checkbox" checked=true id="toggleZOrdering" onclick="toggleZOrdering();"/> Z-Order <br/>
+		<input type="checkbox" checked=true id="toggleAnimation" onclick="toggleAnimation();"/> Animation <br/>
+		<input type="checkbox" checked=true id="toggleRendering" onclick="toggleRendering();"/> Rendering <br/>
+		<p> Controls: Arrow keys pan camera, 'z' zooms in, 'x' zooms out. </p>
+	</body>
+</html>

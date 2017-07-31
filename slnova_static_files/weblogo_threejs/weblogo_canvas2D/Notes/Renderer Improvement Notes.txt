@@ -1,0 +1,28 @@
+Possible next steps for how to improve the renderer: 
+- Find a way to accept requests to preload assets or predict when they need to be loaded instead of waiting till the engine tries to draw an agent.
+- Support for mip-maps necessary for clean scaling of images? <- Investigate how we can do this.
+- Implement camera controls. 
+
+Future steps:
+- Project sprites to screen as if the are facing camera position instead of being parallel to the near plane of the camera. 
+- Can view from more/any perspective (other axies, isometric, free perspective).
+- Use combination of rotating and flipping through sprites to view agents from other perspectives/angles.
+- Once this is settled, support necessary arguments for on-animation callbacks.
+
+Way out there (requires shaders?):
+- Scale sub-patches of sprites based on differences in distance from camera? Only would be noticable for agents close to the camera.
+- Augment sprites with textures for surface normals for lighting.
+- Augment sprites with textures for depth for per-pixel draw order. Can also be used for sub-patch scaling.
+- Shadows (from sunlight, cast onto terrain or maybe onto other agents too, though that's a lot more complicated).
+
+Optimizations:
+- Find a way to sort agents based on their rotation while preserving the z-order sort to avoid cache misses when accessing rotated sprites.
+- Draw only necessary sub-rectangle of terrain or agent sprite. 
+- Drawing to multiple layered canvases (layering canvases allows us to only redraw canvases with changes, also can redraw layers farther from camera less often). 
+- Throw away resources no longer being used or that haven't been used in a long time, maybe limit amount of loaded resources with a cache. 
+- Camera visibility tests (can we just utilize bins for this by checking what bins are visible?).
+- If any transformations are made to images, cache transformed image. 
+- If generating perspective sprite sheets, only generate perspectives that are needed. 
+
+- Is there a way to clip pixels that would be drawn underneath currently drawn pixels?
+- Is there a way to only clear pixels on canvas that will be changed/not drawn over next frame?

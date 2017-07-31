@@ -1,0 +1,197 @@
+.sbPage, .sbDrawer, .sbBlock, .sbLabel, .sbSocket, .sbAfterSocket, .sbPageHolder, .sbDrawerHolder, .sbDrawerLabel {
+	color: #fff;
+	font-weight: bold;
+	text-shadow:
+	1px 1px 0 #000,
+	-1px -1px 0 #000,
+	1px -1px 0 #000,
+	-1px 1px 0 #000;
+	/* NOTE: .sbTrashBin has been removed */
+}
+
+.sbDrawerLabel select option {
+	color: #fff;
+	font-weight: bold;
+	text-align: left;
+	text-shadow:
+	1px 1px 0 #000,
+	-1px -1px 0 #000,
+	1px -1px 0 #000,
+	-1px 1px 0 #000;
+}
+
+.sbPageHolder, .sbPage{
+	background-color: #F0EBCE!important;
+}
+
+.sbPageTab.goog-tab-selected{
+	background-color: #F0EBCE!important;
+	z-index: 1;
+}
+
+.sbPage, .sbDrawer, .sbPageHolder, .sbDrawerHolder, .sbTrashBin, .sbCopyPasteBar {
+	font-family: Arial;
+}
+
+.sbPageHolder {
+	border: 1px solid #333;
+	top: -1px;
+	overflow: auto;
+	float:left;
+}
+
+.sbDrawerHolder {
+	border: 1px solid #333;
+	background-color: #999;
+	padding: 0px;
+}
+
+.sbDrawerLabel {
+	text-align: left;
+	height: 28px;
+	margin: 0px 0px 1px 0px !important;
+	font-size: 16px;
+}
+
+.sbPage {
+	margin: 0px;
+}
+
+.sbDrawer {
+	background-color: #999;
+}
+
+#sbAddPageBtn {
+	vertical-align: middle;
+	vertical-align: -webkit-baseline-middle;
+	height: 1.5em;
+	line-height:1.5em;
+}
+
+.sbInternalInput{
+	font-weight:500;
+	color:#333
+}
+
+.sbBlockLine>input[type="button"]{
+	color:#555555;
+	font-weight:500;
+
+}
+
+.sbEditableLabel{
+	background-color:white!important;
+	font-weight:500;
+	color:#333
+}
+
+.sbBreedNameInput {
+	position: absolute;
+    z-index: 1;
+}
+
+.sbPanelHolder {
+	display: inline-block;
+	width: auto;
+	height: auto;
+	overflow: hidden;
+}
+
+.sbPanel {
+	border: 1px solid black;
+	display: inline-block;
+	margin-right: 4px;
+	float:left;
+}
+
+.sbPanelContent {
+	padding: 8px;
+}
+
+.sbTitleBar {
+	width: 100%;
+	padding-left: 4px;
+	color: white;
+	background-color: gray;
+}
+
+.sbCloseBtn {
+	float: right;
+}
+
+.sbPanel input,  .sbPanel select{
+	margin-left: 8px;
+}
+
+.sbPanel label {
+	display: block;
+	margin:8px 0px 0px 0px;
+}
+
+.sbBtnPanel {
+	margin-top: 10px;
+}
+
+.sbBtnPanel div:not(:first-child) {
+	margin-left: 8px;
+}
+
+.sbPanel {
+	color: black;
+	text-shadow: none;
+}
+
+.sbShapePanel {
+	width: 120px;
+	height: 130px;
+}
+
+.sbTraitPanel{
+	width: 240px;
+	height: 130px;
+}
+
+.sbTrait {
+	display: inline-block;
+	background-color: white;
+	border: 1px solid black;
+	color: black;
+	text-shadow: none;
+	margin: 0 4px 4px 0;
+	padding: 4px;
+}
+
+.sbTraitEditor {	
+}
+
+.sbTraitEditor input {
+	width: 120px;
+}
+
+.sbPageTab.goog-tab {
+  border: 1px solid #333;
+  color: #333;
+  padding: 4px 8px;
+  z-index: 0;
+}
+
+.sbPageTabBar.goog-tab-bar-top .goog-tab-selected {
+	top: 2px;
+	z-index: 1;
+}
+
+/* Breed Editing */
+.slnEditBreedBtn {
+	position: relative;
+	left: 3px;
+	box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    background-color:transparent;
+    width: 1em;
+    height: 1em;
+}
+
+.wgt-editor-menuitem > .fa {
+	margin-right: 10px;
+}
