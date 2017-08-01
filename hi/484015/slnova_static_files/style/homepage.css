@@ -1,0 +1,219 @@
+/*blanket = overlay background for popup
+ * popupdiv = popup div for 'create new project'*/
+
+.selectPos {
+	float:right;
+	margin: auto;
+	margin-top: 0%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+/*img = class for displaying projects within gallaries
+ desc = class for holding project titles/descriptions*/
+.img {
+	margin: 2px;
+	border: 1px solid #999;
+	height: auto;
+	width: auto;
+	vertical-align: top;
+	text-align: center;
+	display: inline-block;
+	position: relative;
+}
+
+.img img {
+	display: block;
+	margin: 3px;
+	border: 1px solid #ffffff;
+	white-space: normal !important;
+}
+
+.img a:hover img {
+	border: 1px solid #0000ff;
+}
+
+.desc {
+	text-align: center;
+	font-weight: normal;
+	width: 210px;
+	height: 90px;
+	overflow: hidden;
+	margin: 2px;
+	white-space: normal !important;
+}
+
+/*gallerydisplay = class for each individual gallery box*/
+.galleryDisplay {
+	width: 90%;
+	height: 140px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	padding: 5px;
+	display: inline-block;
+	position: relative;
+}
+
+/*selected = current 'active' project (per gallery), used for scrolling function*/
+.selected {
+	background-color: #fff !important;
+}
+
+/*left and right arrows for gallery scrolling*/
+.arrowR, .arrowL {
+	width: 0;
+	height: 0;
+	border-top: 50px solid transparent;
+	border-bottom: 50px solid transparent;
+	display: inline-block;
+	margin: 5px;
+	vertical-align: top;
+}
+.arrowL {
+	border-right: 20px solid #CCCCCC;
+}
+.arrowL:hover {
+	border-right: 20px solid #AAAAAA;
+}
+.arrowR {
+	border-left: 20px solid #CCCCCC;
+}
+.arrowR:hover {
+	border-left: 20px solid #AAAAAA;
+}
+
+/*holds individual project titles (before galleries)*/
+.indent {
+	width: 500px;
+}
+.backArrow {
+	width: 0;
+	height: 0;
+	border-top: 12px solid transparent;
+	border-bottom: 12px solid transparent;
+	display: inline-block;
+	margin: auto;
+	text-decoration: none;
+	vertical-align: middle;
+	border-right: 10px solid #CCCCCC;
+}
+.backArrow:hover {
+	border-right: 10px solid #AAAAAA;
+}
+
+.noLineLink a {
+	text-decoration: none;
+}
+
+/*scrollbar formatting for webkit browsers*/
+div::-webkit-scrollbar {
+	width: 6px;
+}
+div::-webkit-scrollbar-track {
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	background: #ccc;
+}
+div::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	background: #aaa;
+}
+
+#popUpBoxLarge {
+	position: fixed !important;
+	top: 85px !important;
+	background-color: #eeeeee;
+	width: 250px;
+	height: auto;
+	z-index: 9002;
+	padding: 20px;
+	display: none;
+}
+
+.hid {
+	display:none;
+}
+
+/*The CSS below include classes/ids that Sylvia
+ *  added to get rid of any inline styles. */
+.heading1 {
+	font-size: 32px;
+	margin-bottom:10px;
+	font-weight: bold;
+}
+
+.heading2 {
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.heading3 {
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.heading4 {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.font20 {
+	font-size: 20px;
+}
+
+.heading5 {
+	font-size: 16px;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+#info {
+	max-width:1000px;
+}
+
+#leftinfo {
+	margin-right: 60px;
+	width:450px;
+	display: inline-block; 
+	vertical-align: top; 
+	height:262px;
+}
+
+#class {
+	vertical-align: top; 
+	margin-right: 82px; 
+	float: right;
+}
+
+#resource {
+	min-width:350px; 
+	height:262px; 
+	display: inline-block; 
+	vertical-align: top;
+}
+
+#getResources {
+	display: block;
+	width: 100%;
+}
+
+#newProjectBtn {
+	margin-bottom: 6px;
+}
+
+a>input[type="button"], a>button{
+	color:#333;
+	text-decoration:none;
+}
+
+/* for project table filter */
+div.hideProjectFilter {
+	display: none;
+	visibility: hidden;
+	width: 0px;
+	height: 0px;
+}
