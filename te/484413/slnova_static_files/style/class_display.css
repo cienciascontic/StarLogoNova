@@ -1,0 +1,38 @@
+.backToPage{
+	font-size:16px;
+}
+.linkblock{
+	margin-bottom: 10px;
+}
+.linktitle{
+	font-weight: bold;
+	font-size: 20px;
+}
+#classtitle{
+	font-size: 28px; 
+	font-weight: 600; 
+	margin-bottom: 10px;
+}
+#class-info {
+	display: inline-block;
+	font-size:16px; 
+	font-weight: 500;
+}
+#popUpBoxLarge {
+	position: fixed !important;
+	top: 75px !important;
+	background-color: #eeeeee;
+	width: 250px;
+	height: auto;
+	z-index: 9002;
+	padding: 20px;
+}
+#infoblock{
+	font-size: 20px; 
+	font-weight: bold; 
+	margin-bottom: 10px;
+}
+#descript{
+	font-size:14px; 
+	font-weight: 100;
+}

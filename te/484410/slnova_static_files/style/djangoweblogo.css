@@ -1,0 +1,288 @@
+select option {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+}
+
+select,
+input[type="text"] {
+  height: auto;
+  margins: 0px !important;
+  padding: 0px 5px !important;
+  line-height: auto !important;
+  border: 0px !important;
+  outline: 0px !important;
+  font-size: auto !important;
+  -webkit-border-radius: 0px !important;
+     -moz-border-radius: 0px !important;
+          border-radius: 0px !important;
+  -webkit-box-shadow: 0 0 1px !important;
+     -moz-box-shadow: 0 0 1px !important;
+          box-shadow: 0 0 1px !important;
+  display: auto !important;
+  vertical-align: top !important;
+}
+
+select {
+	/*Auto-width conflicts with the resizable elements.
+	width: auto !important;*/
+	font-weight:500;
+	color:#555555;
+}
+body #info{
+	margin: 10px;
+}
+#d{
+	resize: none;
+}
+#blockWS {
+	/*height: 650px!important;*/
+    width: 97%!important;
+    margin-bottom: 50px;
+}
+#id_title, #id_tags {
+	padding: 4px 6px!important;
+	/*margin-bottom: 10px!important;*/
+	margin-bottom: 10px;
+    font-size: 14px!important;
+}
+#profileTab{
+	float: right;
+	vertical-align: center;
+	margin-right: 10px;
+}
+#profileTab a{
+	color:#999999;
+}
+#profileTab a:hover{
+	color:#FFFFFF;
+	text-decoration:none;
+}
+
+
+#g{
+	max-height:162px;
+	max-width: 442px;
+}
+#id_tags {
+	margin-bottom:5px;
+}
+body{
+	min-height:250px!important;
+    min-width: 600px!important;
+    height:auto;
+    overflow-y:visible;
+}
+
+#blockWS.span12{
+	margin-top: 60px;
+	height:auto;
+	overflow-y:visible!important;
+	min-height:650px;
+}
+
+.span12{
+	overflow: visible!important;
+	height:auto!important;
+}
+
+textarea {
+	width:95%;
+	max-width:95%!important;
+}
+
+.antiBounce{
+	overflow-x:hidden;
+	height:100%;
+	width: 100%;
+}
+
+#blanket {
+	background-color: #111;
+	opacity: 0.65;
+	filter: alpha(opacity=65);
+	position: absolute;
+	z-index: 9001;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+#popUpDiv, #selectProjectTypeDiv {
+	position: fixed !important;
+	top: calc(50% - 125px);
+	left: calc(50% - 150px);
+	background-color: #eeeeee;
+	width: 300px;
+	height: 250px;
+	z-index: 9002;
+	padding: 20px;
+}
+
+#popUpSquare {
+	position: fixed;
+	top: 200px;
+	left: 50%;
+	margin-left:-150px;
+	background-color:black;
+	width: 300px;
+	height: 125px;
+	z-index: 9002;
+	padding: 4px;
+}
+
+#turtle {
+	position: relative;
+	top:0;
+	left:0;
+}
+
+#pwidget
+{
+  background-color:black;
+  width:256px;
+  padding:2px;
+  -moz-border-radius:3px;
+  border-radius:3px;
+  text-align:left;
+  border:1px solid black;
+  position: fixed;
+  top: 246px;
+  left: 50%;
+  margin-left:-128px;
+}
+#progressbar
+{
+  width:254px;
+  padding:1px;
+  background-color:white;
+  border:1px solid black;
+  height:14px;
+}
+#indicator
+{
+  width:0px;
+  background-image:url("../images/orange_square.png");
+  height:10px;
+  margin:0;
+}
+#progressnum
+{
+  text-align:center;
+  width:250px;
+}
+#popUpBox {
+	position: fixed !important;
+	top: calc(50% - 125px);
+	left: calc(50% - 325px);
+	background-color: #eeeeee;
+	width: auto;
+	height: 250px;
+	z-index: 9002;
+	padding: 20px;
+}
+.selectPos {
+	float: right;
+	margin: auto;
+	margin-top: 0%;
+	display: inline-block;
+	vertical-align: top;
+}
+.sounds:hover {
+	cursor: pointer;
+	color: blue;
+}
+
+.runBtnGood {
+	background-color: #2C7020;	
+}
+
+.runBtnGood:hover {
+	background-color: #59E140;	
+}
+
+.runBtnBad {
+	background-color: #590000;	
+}
+
+.runBtnBad:hover {
+	background-color: #B80000;	
+}
+
+.row-fluid{
+	left:0;
+}
+
+a>input[type="button"], a>button{
+	color:#333;
+	text-decoration:none;
+}
+
+ul{
+	padding:0px;
+}
+
+.container-fluid{
+	width:100%;
+}
+
+.span12{
+	margin-left:33px;
+
+}
+
+/* Windows uses a different scroll bar than the one Mac OS uses (not sure about Linux distros),
+ * the width thus of the ui-handle is thus extended to 20px so that the scrollbar does not mask the
+ * resizable handle, and so the resizable does not mask the blocks
+ */
+.ui-resizable-e {
+    width: 6px;
+}
+
+#speedSlider {
+	background-color: #F4F4F4;
+	padding: 1px 2px 3px 5px;
+	border-radius: 5px;
+	border: 1px solid forestgreen;
+    z-index: 1001;
+    display: inline-block;
+    position: absolute;
+    bottom: 1px;
+    right: 8px;
+}
+
+#speedSlider:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+#slider {
+	margin: 0px 5px 0px 5px;
+	width: 180px;
+	height: 15px;
+	top: 5px;
+	position: relative;
+	display: inline;
+}
+
+#speedSliderButton {
+	color: white;
+	display: inline;
+	font-weight: bold;
+	width: 25px;
+	height: 25px;
+	outline: 0;
+	top: 1px;
+    position: relative;
+	border-radius: 4px;
+}
+
+#speedSliderValue {
+	font-weight: bold;
+	border: 1px solid grey;
+	padding: 1px 3px 1px 2px;
+}

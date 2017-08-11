@@ -1,0 +1,148 @@
+<html>
+	<head>
+		<title>ModelViewer Test</title>
+		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+		<!-- Zip Stuff -->
+		<script type="application/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script type="text/javascript" src="kZip-master/filesaver.js"></script>
+		<script type="text/javascript" src="kZip-master/jszip.min.js"></script>
+		<script type="text/javascript" src="kZip-master/slzip.js"></script>
+		<!--script type="text/javascript" src="kZip-master/main.js"></script-->
+
+		<!-- 3D Stuff -->
+		<script type="text/javascript" src="../lib/three.min.js"></script>
+		<script type="text/javascript" src="../lib/ColladaLoader.js"></script>
+		<script type="text/javascript" src="../lib/MTLLoader.js"></script>
+		<script type="text/javascript" src="../lib/OBJLoader.js"></script>
+		<script type="text/javascript" src="../lib/OBJMTLLoader.js"></script>
+		<script type="text/javascript" src="../FileModel.js"></script>
+		<script type="text/javascript" src="../ShapeModel.js"></script>
+		<script id="vertexShader" type="x-shader/x-vertex">
+    		precision highp float;
+
+    		uniform mat4 modelMatrix;
+    		uniform mat4 modelViewMatrix;
+    		uniform mat4 projectionMatrix;
+
+    		attribute vec3 position;
+    		attribute vec3 scale;
+    		attribute vec4 orientation;
+    		attribute vec3 offset;
+    		attribute vec3 normal;
+    		attribute vec2 uv;
+
+    		attribute vec3 color;
+
+    		varying vec2 vUv;
+		    varying vec3 vPosition;
+		    varying vec3 vColor;
+		    varying vec3 vNormal;
+
+		    void main()   {
+
+		        vec3 vPosition = position*scale;
+		        vec3 vcV = cross(orientation.xyz, vPosition);
+		        vPosition = vcV * (2.0 * orientation.w) + (cross(orientation.xyz, vcV) * 2.0 + vPosition);
+		        vPosition += offset;
+
+		        vNormal = normal;
+		        vec3 vcN = cross(orientation.xyz, normal);
+		        vNormal = vcN * (2.0 * orientation.w) + (cross(orientation.xyz, vcN) * 2.0 + vNormal);
+		        vec4 mcN = modelMatrix*vec4(vNormal, 1.0);
+		        vNormal = mcN.xyz;
+
+		        vColor = color;
+		        vUv = uv;
+
+		        gl_Position = projectionMatrix * modelViewMatrix * vec4( vPosition, 1.0 );
+
+		    }
+
+		</script>
+
+		<script id="fragmentShader" type="x-shader/x-fragment">
+		    precision highp float;
+
+		    varying vec2 vUv;
+		    varying vec3 vPosition;
+		    varying vec3 vColor;
+		    varying vec3 vNormal;
+
+		    uniform int hasTex;
+		    uniform sampler2D tex;
+
+		    void main()   {
+
+		        vec3 light = vec3( -5.0, 10.0, 10.0 );
+		        float intensity = max( 0.0, dot(normalize(vNormal.xyz), normalize(light)) );
+		        vec3 color = vColor*(intensity*0.8+0.2);
+		        if (hasTex == 1) {
+		          color = texture2D(tex, vUv).xyz*color; // add texture
+		        }
+		        gl_FragColor = vec4(color, 1.0);
+
+		    }
+
+		</script>
+
+		<!-- What we're testing -->
+		<script type="text/javascript" src="ModelViewer.js"></script>
+
+		<script type="text/javascript">
+			const USE_CPU = false; // True to make renderer use non-webgl fallback.
+			const ZOOM_SPEED = 0.01;
+			const ROTATION_SPEED = 0.5; 
+
+			var lastMouseX = -1; // Global screen x coordinate of the last location of the mouse. 
+								 // Initially -1 to indicate there was no previous mouse location.
+			var lastMouseY = -1; // Global screen y coordinate of the last location of the mouse. 
+								 // Initially -1 to indicate there was no previous mouse location.
+
+			var modelViewer = new ModelViewer(USE_CPU);
+			var zip = null;
+
+			function testModelViewer()
+			{
+				modelViewer.setBackgroundColor(1.0, 1.0, 1.0, 1.0);
+				modelViewer.renderToDiv("div");
+				window.addEventListener("wheel", onWheel);
+				window.addEventListener("mousemove", onMouseMove);
+			}
+
+			function loadSelectedModel()
+			{
+				zip = new StarLogoZipManager(document.getElementById("modelSelect").files[0], function (zip) { modelViewer.loadModelFromZIP(zip); });
+			}
+
+			function onWheel(event)
+			{
+				modelViewer.moveBy((-event.deltaY)*ZOOM_SPEED, 0.0, 0.0);
+				console.log("Radius: " + modelViewer.getCameraPosition()[0]);
+			}
+
+			function onMouseMove(event)
+			{
+				// Process mouse movement.
+				var deltaX = 0;
+				var deltaY = 0;
+				if (lastMouseX >= 0 && lastMouseY >= 0)
+				{
+					deltaX = event.screenX - lastMouseX;
+					deltaY = event.screenY - lastMouseY;
+				}
+				lastMouseX = event.screenX;
+				lastMouseY = event.screenY;
+
+				if (event.buttons == 1)
+				{
+					modelViewer.moveBy(0.0, -deltaX*ROTATION_SPEED, -deltaY*ROTATION_SPEED);
+					console.log("Theta: " + modelViewer.getCameraPosition()[1] + " Phi: " + modelViewer.getCameraPosition()[2]);
+				}
+			}
+		</script>
+	</head>
+	<body onload="testModelViewer();">
+		<div id="div" style="border: none; width: 100%; height: 90%;"></div>
+		<input id="modelSelect" type="file" onchange="loadSelectedModel();"></input>
+	</body>
+</html>

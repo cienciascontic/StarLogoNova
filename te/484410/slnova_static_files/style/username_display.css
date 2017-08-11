@@ -1,0 +1,24 @@
+.sections {
+}
+.btn-green {
+	color: #FFFFFF;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #4D6B1F;
+	background-image: -moz-linear-gradient(top, #669933, #4D6B1F);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#669933), to(#4D6B1F));
+	background-image: -webkit-linear-gradient(top, #669933, #4D6B1F);
+	background-image: -o-linear-gradient(top, #669933, #4D6B1F);
+	background-image: linear-gradient(to bottom, #669933, #4D6B1F);
+	background-repeat: repeat-x;
+	border-color: #4D6B1F;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#669933', endColorstr='#4D6B1F', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+.btn-green:hover, .btn-green:active, .btn-green.active, .btn-green.disabled, .btn-green[disabled] {
+	color: #FFFFFF;
+	background-color: #4D6B1F;
+}
+#welcome-banner{
+
+}

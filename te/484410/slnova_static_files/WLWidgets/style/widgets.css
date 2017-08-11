@@ -1,0 +1,536 @@
+/**************************
+* Widget Workspace Styling
+*/
+.wgt-space {
+	position: relative !important;
+	width: inherit;
+	height: inherit;
+	padding: 1px;
+	position: absolute;
+	font-family: Helvetica;
+}
+
+.wgt-space-menubar {
+	width: 100%;
+	border-bottom: 1px solid white;
+	background-color: white;
+	z-index: 1000;
+	position: absolute;
+}
+
+.wgt-hidden.wgt-el-editable {
+	display: block;
+}
+
+.wgt-hidden.wgt-el-editable .wgt-el-cover {
+    opacity: 0.2;
+	background: repeating-linear-gradient(
+	  45deg,
+	  transparent,
+	  transparent 3px,
+	  #000000 1px,
+	  #000000 4px
+	);
+}
+
+.wgt-hidden {
+	display: none;
+}
+
+.wgt-btnpanel {
+	height: auto;
+	text-align: center;
+	padding: 5px;
+	margin-top: 2px;
+}
+
+.sln-btn {
+	box-shadow: 1px 1px 1px 0px black;
+	cursor: pointer;
+	font: menu;
+	text-align: center;
+	text-decoration: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.sln-btn:active {
+	position: relative;
+	top: 1px;
+	left: 1px;
+	box-shadow: 0px 0px 0px 0px black;
+}
+
+.sln-btn:hover {
+	-webkit-filter: contrast(150%);
+	filter: contrast(150%);
+}
+
+
+
+/**************************
+* Widget Styling
+*/
+.wgt-el {
+	box-sizing: border-box;
+	position: absolute;
+	min-width: 40px;
+	min-height: 28px;
+	overflow: hidden;
+	font: menu;
+}
+
+.wgt-el-frame {
+	padding: 5px;
+	display: block;
+	box-sizing: border-box;
+	overflow: hidden;
+	height: 100%;
+}
+
+.wgt-el-cover {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+    display: none;
+	cursor: move;
+}
+
+.wgt-el-inner {
+	height: 100%;
+	/*box-shadow: 2px 2px 4px grey;*/
+}
+
+.wgt-el-focused > .wgt-el-frame {
+	border: 1px dashed white;
+	padding: 4px;
+}
+
+.wgt-el-editable .wgt-el-cover {
+	display: block;
+}
+
+.wgt-el-editable .wgt-el-inner {
+    opacity: 0.8;
+}
+
+/* JQuery Overrides */
+
+.wgt-el .ui-resizable-handle {
+	z-index: auto !important;
+}
+
+.wgt-el .ui-icon-gripsmall-diagonal-se {
+	right: 3px;
+	bottom: 3px;
+	width: 18px;
+	height: 18px;
+	background-position: -80px -224px;
+}
+
+.wgt-el .ui-resizable-e {
+	right: 2px;
+}
+
+.wgt-el .ui-resizable-s {
+	bottom: 2px;
+}
+
+/**
+* LabelWidget Styling 
+*/
+
+.wgt-lbl,.wgt-databox,.wgt-titled,.wgt-slider {
+	background: lightyellow;
+	color: black;
+	overflow: hidden;
+	border: black solid 1px;
+	border-radius: 3px;
+	box-sizing: border-box;
+	height: 100%;
+}
+
+.wgt-lbl,.wgt-databox,.wgt-slider {
+	padding: 5px;
+}
+
+/* 
+* PushButtonWidget Styling 
+*/
+
+.wgt-btn,.wgt-togglebtn {
+	height: 100%;
+	background: #5c69ff;
+	color: #F2F2F2;
+	box-sizing: border-box;
+	padding: 5px;
+	overflow: hidden;
+	border: black solid 1px;
+	border-radius: 5px;
+}
+
+/*
+* ToggleButton Widget Styling 
+*/
+
+.wgt-centered {
+	display: inline-block;
+	width: auto;
+	margin: auto;
+}
+
+.wgt-centered > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/*
+.wgt-centered .wgt-icon{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.wgt-centered .wgt-title{
+	display: inline-block;
+	vertical-align: middle;
+}
+*/
+
+.wgt-icon {
+  	margin-right: 4px;
+	height: 24px;
+	width: 22px;
+	padding: 3px;
+	padding-top: 4px;
+	background: black;
+	border-radius: 4px;
+}
+
+.wgt-icon-power {
+	height: 16px;
+	width: 16px;
+	background-color: transparent;
+	border-radius: 8px;
+	border: white solid 2px;
+	position: relative;
+}
+
+.wgt-icon-power::after {
+    content: "";
+    height: 14px;
+    width: 8px;
+    border-radius: 4px;
+    border: black solid 3px;
+    background: white;
+    position: absolute;
+    top: -6px;
+    left: 2px;
+}
+
+.wgt-toggled .wgt-icon-power {
+	border-color: #00FF00;
+}
+
+.wgt-toggled .wgt-icon-power::after {
+    background: #00FF00;
+}
+
+.wgt-toggled .wgt-togglebtn {
+	border-color: #00FF00;
+}
+
+/*
+* TitleWidget Styling
+*/
+.wgt-title-holder {
+	background: white;
+	font-weight: bold;
+	border-bottom: 1px solid #1A1A1A;
+	padding: 5px;
+}
+
+.wgt-body {
+	padding: 5px;
+	overflow: hidden;
+}
+
+/* 
+* SliderWidget Styling 
+*/
+.wgt-slider-inner {
+	vertical-align: middle;
+	height: auto;
+	width: auto;
+	padding-right: 1em;
+	padding-left: 1em;
+	padding-top: .5em;
+	padding-bottom: .5em;
+	overflow-x:hidden;
+}
+
+.wgt-slider-holder {
+	overflow: hidden;
+	min-width: 100px;
+}
+
+.wgt-slider-inner .wgt-slider-handle {
+	overflow: hidden;
+	width: auto !important;
+	height: auto !important;
+	display: inline-block;
+	font-size: 8px;
+	padding: 2px 4px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    background: none !important;
+    background-color: #000 !important;
+	border-radius: 4px;
+}
+/*
+.wgt-slider-handle:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+}
+*/
+.wgt-slider-lbl {
+	width: auto;
+	height: 1em;
+	line-height: 1em;
+	margin-top: .4em;
+	padding:0;
+	vertical-align: middle;
+	cursor: default;
+	user-select: none;
+}
+
+.wgt-el-left {
+	float: left;
+	text-align: left;
+}
+
+.wgt-el-right {
+	float: right;
+	text-align: right;
+}
+
+.wgt-slider .wgt-body {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+/* Bootstrap overrides */
+.wgt-slider .slider-selection {
+	background: #BABABA;
+}
+
+.wgt-slider .slider {
+	margin-top: .5em;
+	display: block;	
+}
+
+.wgt-slider .slider.slider-horizontal {
+	width: auto;
+	min-width: 100px;
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+.wgt-slider .slider-handle {
+	opacity: 0;
+}
+
+.wgt-slider .slider .tooltip.top {
+    margin-top: -24px;
+}
+
+/* 
+* TableWidget Styling 
+*/
+
+.wgt-table-handson {
+	overflow: hidden;
+}
+
+/* HandsOnTable Overrides */
+
+.ht_clone_top,.ht_clone_left,.ht_clone_top_left_corner,.ht_clone_bottom_left_corner,.ht_clone_debug {
+	z-index: 0 !important; 
+}
+
+/*
+* Widget Editor Styling
+*/
+
+.wgt-editor {
+	position: absolute;
+	background-color: #f1f1f1;
+	border: 1px solid black;
+	border-radius: 4px;
+	padding: 4px;
+}
+
+.wgt-deletebtn {
+	margin: auto;
+	width: auto;
+	overflow: hidden;
+    /*color: #fff;
+    background-color: #d9534f;*/
+    color: #444444;
+    background-color: white;
+	font: menu;
+	padding: 4px;
+	border: lightGray solid 1px;
+	border-radius: 5px;
+	user-select: none;
+	cursor: pointer;
+}
+
+.wgt-deletebtn-icon {
+	height: 16px;
+	width: auto;
+	margin-right: 5px;
+}
+
+.wgt-editor table {
+	border-collapse: collapse;
+}
+
+.wgt-editor td {
+	padding: 3px;
+}
+
+.wgt-editor td:first-child {
+	text-align: right;
+	font-weight: bold;
+}
+
+.wgt-series-row {
+	padding: 2px;
+}
+
+.wgt-series-name {
+	margin-right: 4px;
+}
+
+.wgt-series-color {
+	height: 20px;
+	width: 20px;
+	margin-right: 4px;
+	display: inline-block;
+	border: 1px solid black;
+	border-radius: 3px;
+	outline: white solid 1px;
+	background-color: white;
+	vertical-align: middle;
+    /* Hide the text. */
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.wgt-series-addbtn,.wgt-series-deletebtn {
+	display: inline-block;
+	width: auto;
+	height: auto;
+	vertical-align: middle;
+	border-radius: 10px;
+	background-color: white;
+}
+
+.wgt-series-addbtn-icon,.wgt-series-deletebtn-icon {
+	height: 20px;
+	width: 20px;
+	display: inline-block;
+	border: 1px solid grey;
+	border-radius: inherit;
+	font-weight: bold;
+}
+
+.wgt-series-addbtn-label,.wgt-series-deletebtn-label {
+	display: inline-block;
+	width: auto;
+}
+
+/*
+* Chart Widget Styling
+*/
+.wgt-chart {
+	min-width: 320px;
+	min-height: 175px;
+	font-family: Helvetica;
+}
+
+.wgt-chart-holder {
+	min-width: 200px;
+	min-height: 150px;
+	width: 320px;
+	height: 240px;
+}
+
+.wgt-chart-holder div {
+	z-index: 0 !important; 
+}
+
+.wgt-chart-legend {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+	border: 1px solid black;
+	background-color: white;
+	padding: 2px;
+	font-size: 10px;
+}
+
+.wgt-chart-legend-color {
+	width: 12px;
+	height: 12px;
+	display: inline-block;
+}
+
+.wgt-chart table {
+	border-collapse: collapse;
+}
+
+.wgt-chart td {
+	padding: 1px;
+}
+
+.wgt-chart td:first-child {
+	text-align: right;
+	font-weight: bold;
+}
+
+.wgt-downloadbtn {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	background-color: black;
+	color:white;
+	padding: 3px;
+	border-radius: 2px;
+}
+
+.wgt-downloadbtn:hover {
+	background-color: white;
+	color:black;
+}
+
+.wgt-downloadbtn:active {
+	right: 9px;
+	top: 11px;
+}
+
+/* dygraph overrides */
+.dygraph-label {
+	font-size: 12px !important;
+}
+
+.dygraph-legend {
+	font-size: 10px !important;
+}
+
+.dygraph-axis-label {
+	user-select: none;
+}
