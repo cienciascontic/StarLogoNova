@@ -1,0 +1,366 @@
+#blanket {
+	background-color: #111;
+	opacity: 0.65;
+	filter: alpha(opacity=65);
+	position: absolute;
+	z-index: 9001;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100% !important;
+}
+
+#popUpBox {
+	position: fixed !important;
+	top: 200px !important;
+	background-color: #eeeeee;
+	width: 250px;
+	height: auto;
+	z-index: 9002;
+	padding: 20px;
+}
+.selectPos {
+	margin: auto;
+	margin-top: 0%;
+	display: inline-block;
+}
+
+.img {
+	margin: 2px;
+	border: 1px solid #999;
+	height: auto;
+	width: auto;
+	vertical-align: top;
+	text-align: center;
+	display: inline-block;
+	position: relative;
+}
+
+.img img {
+	display: block;
+	margin: 3px;
+	border: 1px solid #ffffff;
+	white-space: normal !important;
+}
+
+.img a:hover img {
+	border: 1px solid #0000ff;
+}
+
+.desc {
+	text-align: center;
+	font-weight: normal;
+	width: 210px;
+	height: 90px;
+	overflow: hidden;
+	margin: 2px;
+	white-space: normal !important;
+}
+
+/*gallerydisplay = class for each individual gallery box*/
+.galleryDisplay {
+	width: 90%;
+	height: 140px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	padding: 5px;
+	display: inline-block;
+	position: relative;
+}
+
+/*selected = current 'active' project (per gallery), used for scrolling function*/
+.selected {
+	background-color: #fff !important;
+}
+
+/*left and right arrows for gallery scrolling*/
+.arrowR, .arrowL {
+	width: 0;
+	height: 0;
+	border-top: 50px solid transparent;
+	border-bottom: 50px solid transparent;
+	display: inline-block;
+	margin: 5px;
+	vertical-align: top;
+}
+.arrowL {
+	border-right: 20px solid #CCCCCC;
+}
+.arrowL:hover {
+	border-right: 20px solid #AAAAAA;
+}
+.arrowR {
+	border-left: 20px solid #CCCCCC;
+}
+.arrowR:hover {
+	border-left: 20px solid #AAAAAA;
+}
+
+/*holds individual project titles (before galleries)*/
+.indent {
+	width: 500px;
+}
+.backArrow {
+	width: 0;
+	height: 0;
+	border-top: 12px solid transparent;
+	border-bottom: 12px solid transparent;
+	display: inline-block;
+	margin: auto;
+	text-decoration: none;
+	vertical-align: middle;
+	border-right: 10px solid #CCCCCC;
+	text-decoration: none;
+}
+.backArrow:hover {
+	border-right: 10px solid #AAAAAA;
+}
+
+#popUpBoxLarge {
+	position: fixed !important;
+	top: 85px !important;
+	background-color: #eeeeee;
+	width: 250px;
+	height: auto;
+	z-index: 9002;
+	padding: 20px;
+}
+#pageOpt li {
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 3px;
+}
+#pageOpt li:hover {
+	cursor: pointer;
+	background-color: rgb(0, 129, 194);
+	background-image: linear-gradient(rgb(0, 136, 204), rgb(0, 119, 179));
+	background-repeat: repeat-x;
+	color: rgb(255, 255, 255);
+	/*clear:both;*/
+	/*white-space: nowrap;*/
+	/*width:100%;*/
+}
+
+#titleText{
+	font-size: 28px; 
+	font-weight: 600; 
+	margin-bottom: 5px;
+	display: inline-block;
+}
+
+#subtitlespan{
+	font-size: 18px; 
+	margin-bottom: 5px
+}
+.sectionhead{
+	font-size: 16px;
+}
+
+.fieldWrapper{
+	padding: 3px;
+}
+
+.blocky-btn{
+	color: #FFFFFF;
+	text-shadow: 1px -1px 0 rgba(0, 0, 0, 0.5);
+	text-shadow: inset 1px -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: /*#4D6B1F;*/ #669933;
+	-moz-box-shadow: inset 2px 0px 0px #95ca61, inset 0px -2px 1px #4D6B1F, inset 0px 2px 0px #95ca61, inset -2px 0px 1px #4D6B1F;
+   -webkit-box-shadow: inset 2px 0px 0px #95ca61, inset 0px -2px 1px #4D6B1F, inset 0px 2px 0px #95ca61, inset -2px 0px 1px #4D6B1F;
+   	box-shadow: inset 2px 0px 0px #95ca61, inset 0px -2px 1px #4D6B1F, inset 0px 2px 0px #95ca61, inset -2px 0px 1px #4D6B1F;
+   	border: 1px solid #333;
+}
+
+/*.btn-green:hover, .blocky-btn:active, .blocky-btn.active, .blocky-btn.disabled, .blocky-btn[disabled] {
+	background-color: #568526;
+	-moz-box-shadow:  inset 1px 1px 1px #4D6B1F;
+   -webkit-box-shadow: inset 1px 1px 1px #4D6B1F;
+   	box-shadow: inset 1px 1px 1px #4D6B1F;
+}*/
+.blocky-btn:hover{
+	color: #FFFFFF;
+	background-color: #5F9428;
+	-moz-box-shadow: inset 2px 0px 0px #669933, inset 0px -2px 1px #568526, inset 0px 2px 1px #669933, inset -2px 0px 1px #568526;
+   -webkit-box-shadow: inset 2px 0px 0px #669933, inset 0px -2px 1px #568526, inset 0px 2px 1px #669933, inset -2px 0px 1px #568526;
+   	box-shadow: inset 2px 0px 0px #669933, inset 0px -2px 1px #568526, inset 0px 2px 1px #669933, inset -2px 0px 1px #568526;
+}
+
+.blocky-btn:active, .blocky-btn.active, .blocky-btn.disabled, .blocky-btn[disabled] {
+	background-color: #568526;
+	-moz-box-shadow: inset -2px 0px 0px #669933, inset 0px 2px 1px #4D6B1F, inset 0px -2px 1px #669933, inset 2px 0px 1px #4D6B1F;
+   -webkit-box-shadow: inset -2px 0px 0px #669933, inset 0px 2px 1px #4D6B1F, inset 0px -2px 1px #669933, inset 2px 0px 1px #4D6B1F;
+   	box-shadow: inset -2px 0px 0px #669933, inset 0px 2px 1px #4D6B1F, inset 0px -2px 1px #669933, inset 2px 0px 1px #4D6B1F;
+}
+
+.pg-tabs{
+	border:none;
+	font-size:16px;
+}
+
+.pg-tabs > li{
+	z-index: 1;
+	background: rgba(0,0,0,0);
+	border-bottom:none;
+}
+
+.pg-tabs > li > a{
+	color: #ddd;
+	text-shadow: 1px -1px 0 rgba(0, 0, 0, 0.5);
+	background-color: #5F9428;
+	-moz-box-shadow: inset 2px 0px 0px #669933, inset 0px -2px 1px #568526, inset 0px 2px 1px #669933, inset -2px 0px 1px #568526;
+   -webkit-box-shadow: inset 2px 0px 0px #669933, inset 0px -2px 1px #568526, inset 0px 2px 1px #669933, inset -2px 0px 1px #568526;
+   	box-shadow: inset 2px 0px 0px #669933, inset 0px -2px 1px #568526, inset 0px 2px 1px #669933, inset -2px 0px 1px #568526;
+}
+
+.pg-tabs > li > a:hover{
+	color: #fff;
+	background-color: #5F9428;
+	border: 1px solid transparent;
+}
+
+.pg-tabs > li.active{
+	z-index: 5;
+	margin-bottom:auto;
+}
+.pg-tabs > li.active > a{
+	border: 1px solid #333;
+	background: #669933;
+	-moz-box-shadow: inset 1px 0px 0px #95ca61, inset 0px 2px 0px #95ca61, inset 0px -2px 1px #669933, inset -2px 0px 1px #4D6B1F,;
+   -webkit-box-shadow: inset 1px 0px 0px #95ca61, inset 0px 2px 0px #95ca61, inset 0px -2px 1px #669933, inset -2px 0px 1px #4D6B1F,;
+   	box-shadow: inset 1px 0px 0px #95ca61, inset 0px 2px 1px #95ca61, inset 0px -2px 1px #669933, inset -2px 0px 1px #4D6B1F;
+   	border-bottom: none;
+   	color:#fff;
+   	text-shadow: 1px -1px 0 rgba(0, 0, 0, 0.5);
+   	
+}
+
+.pg-tabs > li.active > a:hover{
+	background: #669933;
+	border-bottom: none;
+	margin-bottom:0;
+	color:#fff;
+	border: 1px solid #333;
+	border-bottom: none;
+}
+
+.pg-tabs-box{
+	position:relative;
+	z-index:3;
+	padding:15px;
+	box-sizing: border-box;
+	border: 1px solid #333;
+	border-radius: 4px;
+	margin-top:-5px;
+	margin-bottom:20px;
+	background: #669933;
+	-moz-box-shadow: inset 1px 0px 0px #95ca61, inset 0px -2px 1px #4D6B1F, inset 0px 1px 0px #95ca61, inset -2px 0px 1px #4D6B1F;
+   -webkit-box-shadow: inset 1px 0px 0px #95ca61, inset 0px -2px 1px #4D6B1F, inset 0px 1px 0px #95ca61, inset -2px 0px 1px #4D6B1F;
+   	box-shadow: inset 1px 0px 0px #95ca61, inset 0px -2px 1px #4D6B1F, inset 0px 2px 1px #95ca61, inset -2px 0px 1px #4D6B1F;
+}
+
+.pg-display{
+	border: 1px solid #333;
+	background:#ffffff;
+	padding:10px;
+	border-radius: 4px;
+	box-shadow: inset 0px 0px 2px;
+}
+
+.pg-tabs > li.tab-blue > a{
+	background-color: #5e91c4;
+	-moz-box-shadow: inset 1px 0px 0px #6699cc, inset 0px 2px 0px #6699cc, inset 0px -2px 1px #6699cc, inset -2px 0px 1px #4574a2,;
+   -webkit-box-shadow: inset 1px 0px 0px #6699cc, inset 0px 2px 0px #6699cc, inset 0px -2px 1px #6699cc, inset -2px 0px 1px #4574a2,;
+   	box-shadow: inset 1px 0px 0px #6699cc, inset 0px 2px 1px #6699cc, inset 0px -2px 1px #6699cc, inset -2px 0px 1px #4574a2;
+}
+
+.pg-tabs .tab-blue> li > a:hover{
+	background-color: #5e91c4;
+}
+
+.pg-tabs > li.active.tab-blue > a{
+	background: #6699cc;
+	-moz-box-shadow: inset 1px 0px 0px #a5cff9, inset 0px 2px 0px #a5cff9, inset 0px -2px 1px #6699cc, inset -2px 0px 1px #4574a2,;
+   -webkit-box-shadow: inset 1px 0px 0px #a5cff9, inset 0px 2px 0px #a5cff9, inset 0px -2px 1px #6699cc, inset -2px 0px 1px #4574a2,;
+   	box-shadow: inset 1px 0px 0px #a5cff9, inset 0px 2px 1px #a5cff9, inset 0px -2px 1px #6699cc, inset -2px 0px 1px #4574a2;
+   	
+}
+
+.pg-tabs > li.active.tab-blue > a:hover{
+	background: #6699cc;
+}
+
+.pg-tabs-box.tab-blue{
+	background: #6699cc;
+	-moz-box-shadow: inset 1px 0px 0px #a5cff9, inset 0px -2px 1px #4574a2, inset 0px 1px 0px #a5cff9, inset -2px 0px 1px #4574a2;
+   -webkit-box-shadow: inset 1px 0px 0px #a5cff9, inset 0px -2px 1px #4574a2F, inset 0px 1px 0px #a5cff9, inset -2px 0px 1px #4574a2;
+   	box-shadow: inset 1px 0px 0px #a5cff9, inset 0px -2px 1px #4574a2, inset 0px 2px 1px #a5cff9, inset -2px 0px 1px #4574a2;
+}
+
+
+
+
+/*.pg-tabs > li.tab-orange > a{
+	background-color: #eba226;
+	-moz-box-shadow: inset 1px 0px 0px #f7b634, inset 0px 2px 0px #f7b634, inset 0px -2px 1px #f7b634, inset -2px 0px 1px #da9319,;
+   -webkit-box-shadow: inset 1px 0px 0px #f7b634, inset 0px 2px 0px #f7b634, inset 0px -2px 1px #f7b634, inset -2px 0px 1px #da9319,;
+   	box-shadow: inset 1px 0px 0px #f7b634, inset 0px 2px 1px #f7b634, inset 0px -2px 1px #f7b634, inset -2px 0px 1px #da9319;
+}
+
+.pg-tabs .tab-orange> li > a:hover{
+	background-color: #eba226;
+}
+
+.pg-tabs > li.active.tab-orange > a{
+	background: #f7b634;
+	-moz-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px 2px 0px #ffd88a, inset 0px -2px 1px #f7b634, inset -2px 0px 1px #da9319,;
+   -webkit-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px 2px 0px #ffd88a, inset 0px -2px 1px #f7b634, inset -2px 0px 1px #da9319,;
+   	box-shadow: inset 1px 0px 0px #ffd88a, inset 0px 2px 1px #ffd88a, inset 0px -2px 1px #f7b634, inset -2px 0px 1px #da9319;
+   	
+}
+
+.pg-tabs > li.active.tab-orange > a:hover{
+	background: #f7b634;
+}
+
+.pg-tabs-box.tab-orange{
+	background: #f7b634;
+	-moz-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px -2px 1px #da9319, inset 0px 1px 0px #ffd88a, inset -2px 0px 1px #da9319;
+   -webkit-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px -2px 1px #da9319, inset 0px 1px 0px #ffd88a, inset -2px 0px 1px #da9319;
+   	box-shadow: inset 1px 0px 0px #ffd88a, inset 0px -2px 1px #da9319, inset 0px 2px 1px #ffd88a, inset -2px 0px 1px #da9319;
+}*/
+
+.pg-tabs > li.tab-orange > a{
+	background-color: #de7825;
+	-moz-box-shadow: inset 1px 0px 0px #ed8a2a, inset 0px 2px 0px #ed8a2a, inset 0px -2px 1px #ed8a2a, inset -2px 0px 1px #cf681c,;
+   -webkit-box-shadow: inset 1px 0px 0px #ed8a2a, inset 0px 2px 0px #ed8a2a, inset 0px -2px 1px #ed8a2a, inset -2px 0px 1px #cf681c,;
+   	box-shadow: inset 1px 0px 0px #ed8a2a, inset 0px 2px 1px #ed8a2a, inset 0px -2px 1px #ed8a2a, inset -2px 0px 1px #cf681c;
+}
+
+.pg-tabs .tab-orange> li > a:hover{
+	background-color: #de7825;
+}
+
+.pg-tabs > li.active.tab-orange > a{
+	background: #ed8a2a;
+	-moz-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px 2px 0px #ffd88a, inset 0px -2px 1px #ed8a2a, inset -2px 0px 1px #cf681c,;
+   -webkit-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px 2px 0px #ffd88a, inset 0px -2px 1px #ed8a2a, inset -2px 0px 1px #cf681c,;
+   	box-shadow: inset 1px 0px 0px #ffd88a, inset 0px 2px 1px #ffd88a, inset 0px -2px 1px #ed8a2a, inset -2px 0px 1px #cf681c;
+   	
+}
+
+.pg-tabs > li.active.tab-orange > a:hover{
+	background: #ed8a2a;
+}
+
+.pg-tabs-box.tab-orange{
+	background: #ed8a2a;
+	-moz-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px -2px 1px #cf681c, inset 0px 1px 0px #ffd88a, inset -2px 0px 1px #cf681c;
+   -webkit-box-shadow: inset 1px 0px 0px #ffd88a, inset 0px -2px 1px #cf681c, inset 0px 1px 0px #ffd88a, inset -2px 0px 1px #cf681c;
+   	box-shadow: inset 1px 0px 0px #ffd88a, inset 0px -2px 1px #cf681c, inset 0px 2px 1px #ffd88a, inset -2px 0px 1px #cf681c;
+}
+
+a>input[type="button"], a>button{
+	color:#333;
+	text-decoration:none;
+}

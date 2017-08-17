@@ -1,0 +1,8 @@
+- Is ModelManager.add() actually part of the interface? The readme claims this, but the comments have a lot of rep exposure and the way that the method is used seems to suggest
+	that it's used to render the scene internally by the ModelManager.
+- Which of the terrain methods are actually part of its interface? Doesn't seem like all of these methods are intended to be public/used by engine. 
+- What are the terrain methods intended to do? (what are their specs?)
+- Doesn't look to me like the renderer supports setting an on-animation callback of any kind.
+
+- Are there simplifying assumptions I can make about what angles the camera can view agents from or is it truly free to 
+	view from any perspective?

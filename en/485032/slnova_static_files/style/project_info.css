@@ -1,0 +1,67 @@
+ul{
+	list-style: none; 
+	margin:0px;
+}
+.well{
+	width: 80%; 
+	height:150px;
+	overflow: auto; 
+	background-color: white;
+}
+#info-block{
+	margin-bottom: 7px;
+}
+#info-block>ul>li{
+	/*height: 19px;*/
+}
+label[for="id_galleries"]{
+	font-size:18px;
+}
+.col-md-4{
+	max-width: 500px!important;
+}
+
+.navbar-inverse{
+	max-height: 40px;
+}
+@media (max-width: 991px){  /*This works, although it works best with the particular username I've been using to test this feature.*/
+	.navbar-inverse{
+		overflow:hidden; /*scroll is OK but allows horizontal scrolling of the top bar that's undesirable.*/
+	}
+}
+@media (max-width: 979px){
+	.navbar-inner{
+		margin-top:-5px;
+	}
+	.col-md-4{
+		margin-top: 20px;
+	}
+    .navbar-inverse{
+    	padding-bottom: 0px;
+    	margin-bottom: 0px;
+    }
+}
+@media (max-width:770px){
+	.navbar li {
+		float:right;
+	}
+	#home{
+		float:left;
+	}
+	.navbar-nav {
+		width: 100%;
+	}
+	#profileTab{
+		display:none;
+	}
+}
+/*
+@media (max-width:468px){ /*alternate option only for overflow:scroll above* /
+	#profileTab{
+		display:none;
+	}
+	.navbar-inverse{
+		overflow:hidden; /*doesn't reset scrolling so you may not see the desired part of menu* /
+	}
+}
+*/

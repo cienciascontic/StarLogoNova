@@ -1,0 +1,17 @@
+Start by implementing something basic:
+- Use canvas to draw scaled down textures to new images or see if canvas/javascript has something for MIP mapping. 
+- Store levels as seperate images.
+- No filtering between MIP levels. If rendering a size between MIP levels just scale up from the lower resolution level. 
+
+
+Immediate Improvements:
+- Implement a simple algorithm for downsizing, like averaging groups of four pixels (check to see what canvas does already to make sure you aren't doing the same thing or 
+	something worse). Could also look for a javascript library that can handle MIP mapping for you. 
+- See if storing MIP levels in the same image and rendering sub-sections of that image is more performant. 
+- Find a way to do bilinear filtering. 
+
+
+Future Improvements:
+- Investiage other algorithms for downsizing that are more asthetically pleasing. More performant algorithms aren't necessarily more desireable unless MIP maps will be
+	being produced on the fly. 
+- Investigate trilinear filtering between two levels of a MIP map for rendering a resolution in between two levels. 
