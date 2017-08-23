@@ -1,0 +1,175 @@
+html, body {
+	margin-left: 5px;
+}
+
+html {
+    padding-top: 60px;
+}
+
+ul {
+	display: inline-block;
+    /*float: left;*/
+}
+
+#profileTab {
+	display: inline-block;
+	float: right;
+	vertical-align: center;
+	padding-top: 10px !important;
+	margin-right: 18px;
+}
+
+#profileTab a {
+	color: #999999;
+}
+
+#profileTab a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+#authenticated{
+	float:left;
+	color:#CFCFCF;
+}
+#profileLink{
+	float:left;
+	padding-right:5px!important;
+}
+#profileLink a {
+	color: #CFCFCF;
+	padding:10px 0px 3px 40px;
+}
+#profile{
+	float:right;
+	width:25px;
+	padding-left:0px!important;
+}
+#profile a{
+	padding-top:5px;
+}
+
+#runLi{
+	/*padding-left: 50px; */
+	font-size: 18px
+}
+
+
+.right{
+	display:none;
+}
+
+.form-control{
+	height:34px!important;
+}
+
+.navbar-right> div#profileTab > li{
+	padding:15px 10px 15px 10px;
+}
+
+.navbar-right> div#profileTab > li#profileLink > a{
+	padding:0px;
+}
+
+#profileTab{
+	padding:0px!important;
+}
+
+#search-group{
+	width:300px;
+}
+#inp-search{
+    padding-left: 29px;
+    
+}
+
+#search-con{
+	position: absolute;
+    left: 107px;
+    padding: 8px 12px 12px 12px;
+    pointer-events: none;
+    opacity:0.5;
+}
+
+.active#search-con{
+	opacity: 1;
+}
+#home{
+	width: 185px;
+	visibility:hidden;
+}
+#logo{
+	position:fixed;
+	float:left;
+	z-index: 10000;
+	padding-left: 15px;
+}
+
+#prof-opt:hover{
+	cursor:pointer;
+	background-color:rgba(0,0,0,0);
+}
+
+.nav .open > a#prof-opt{
+	background-color:rgba(0,0,0,0);
+}
+
+.navbar-inverse{
+	background:#223;
+	border-bottom-color: #112;
+	position:fixed;
+	margin-left: 0px;
+	margin-top: 0px;
+}
+
+/* override bootstrap navbar styles for navbar items that should be disabled (used for Save button when there are no new changes) */
+.navbar-inverse .navbar-nav > li > a:hover.disabledNavBarLi, 
+.navbar-inverse .navbar-nav > li > a:focus.disabledNavBarLi {
+	color: #999;
+	cursor: default;
+}
+
+/* override bootstrap navbar styles for navbar items that are just text (used now for the status bar)*/
+.navbar-inverse .navbar-nav > li#statusBarLi {
+	padding: 15px 10px 15px 10px;
+	color: #CFCFCF;
+}
+
+#selector-btn{
+	color: #FFFFFF;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	text-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: /*#4D6B1F;*/ #669933;
+	-moz-box-shadow: inset 2px 0px 0px #95ca61, inset 0px 2px 1px #95ca61, inset 0px -2px 1px #4D6B1F;
+   -webkit-box-shadow: inset 2px 0px 0px #95ca61, inset 0px 2px 1px #95ca61, inset 0px -2px 1px #4D6B1F;
+   	box-shadow: inset 2px 0px 0px #95ca61, inset 0px 2px 1px #95ca61, inset 0px -2px 1px #4D6B1F;
+	/*background-image: -moz-linear-gradient(top, #669933, #4D6B1F);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#669933), to(#4D6B1F));
+	background-image: -webkit-linear-gradient(top, #669933, #4D6B1F);
+	background-image: -o-linear-gradient(top, #669933, #4D6B1F);
+	background-image: linear-gradient(to bottom, #669933, #4D6B1F);
+	background-repeat: repeat-x;
+	border-color: #4D6B1F;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#669933', endColorstr='#4D6B1F', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);*/
+}
+
+#selector-btn:hover, #selector-btn:focus, #selector-btn:active, #selector-btnt.active, .open .dropdown-toggle#selector-btn{
+	background-color: /*#4D6B1F;*/ #7cb93e;
+	-moz-box-shadow: inset 2px 0px 0px #b6e28b, inset 0px 2px 1px #b6e28b, inset 0px -2px 1px #669933;
+   -webkit-box-shadow: inset 2px 0px 0px #b6e28b, inset 0px 2px 1px #b6e28b, inset 0px -2px 1px #669933;
+   	box-shadow: inset 2px 0px 0px #b6e28b, inset 0px 2px 1px #b6e28b, inset 0px -2px 1px #669933;
+}
+
+#resources{
+	font-size: 16px;
+	padding-right:20px;
+}
+#resources>a{
+	color: #CFCFCF;
+	font-weight: 300;
+}
+
+#resources>a:hover{
+	color: white;
+}

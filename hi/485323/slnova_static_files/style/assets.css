@@ -1,0 +1,268 @@
+.assetPopUpWindow {
+	position: fixed !important;
+	top: 50%;
+	left: 50%;
+	background-color: #eeeeee;
+	z-index: 9002;
+	padding: 10px;
+}
+
+.assetDiv {
+	float: left;
+	margin: 10px;
+}
+
+#assetCreate {
+	float: left;
+	width:90px;
+	height:90px;
+	outline: 0;
+}
+
+
+#assetCreateButton {
+	background-color: transparent;
+	width: 90px;
+	height: 90px;
+	border-radius: 10px;
+	outline: 0;
+}
+
+#assetCreateButton:hover {
+	background-color: white;
+}
+
+#closeAssetManager {
+	position: absolute;
+}
+
+.asset-header {
+	text-align: center;
+	margin-top: 10px;
+}
+
+#assetSearch {
+	border-right: 1px solid black;
+	padding-right: 15px;
+}
+
+#asset_title,
+#asset_creator,
+#asset_tags {
+	width: 64%;
+	padding: 4px 6px !important;
+	margin-bottom: 10px;
+    font-size: 12px;
+}
+
+#asset_file,
+#asset_thumbnail {
+	margin-bottom: 5px;
+}
+
+#asset_description {
+	max-width: 100%;
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+#all_asset_tags {
+	height: 50px;
+	overflow: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+}
+
+.asset_tag_item {
+	display: inline-block;
+	padding: 1px 0 1px 5px;
+	border: 1px solid black;
+	margin: 2px;
+	font-weight: bold;
+}
+
+.asset_tag_item:hover{
+	cursor: pointer;
+}
+
+a {
+	color: black;
+}
+
+a:hover {
+	text-decoration: none;
+	color: gray;
+}
+
+.remove_asset_tag {
+	text-indent:0;
+	display:inline-block;
+	font-family:Arial;
+	font-size:8px;
+	font-weight:bold;
+	font-style:normal;
+	line-height:10px;
+	height:10px;
+	width:10px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #ffffff;
+	position: relative;
+	top: -8px;
+}
+
+#asset_submit {
+	text-align: center;
+}
+
+#search-group {
+	margin: auto;
+}
+
+#search-con {
+	padding: 10px 12px 12px 12px;
+}
+
+#assetsAvailable {
+	height: 360px;
+	margin: 10px 0;
+	overflow-y: auto;
+	clear: both;
+}
+
+.assetItem {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow:hidden;
+	position:relative;
+	padding:7px;
+	height: 100px;
+	width: 100px;
+	display: inline-block;
+	float:left;
+	text-align: center;
+	border-radius: 10px;
+}
+
+.assetItem:hover {
+	background-color: white;
+}
+
+.assetItem:hover .addAsset {
+	display: block;
+}
+
+.assetItem:hover .removeAsset {
+	display: block;
+}
+
+.assetItem:hover .assetPreview {
+	display: block;
+}
+
+.assetPreview a {
+	text-align: center;
+	margin: auto;
+	cursor: pointer;
+}
+
+.assetPreview a:hover{
+	color: red;
+}
+
+.assetPreview {
+	margin-left: -7px;
+	font-weight:bold;
+	position: absolute;
+	padding-top: 25px;
+	font-size: 40px;
+	text-align: center;
+	opacity: .4;
+	height: 100px;
+	width: 100px;
+	top: 0;
+	display: none;
+}
+
+.addAsset:hover {
+	color: #A6F2CF;
+}
+
+.addAsset {
+	float:top;
+	float: right;
+	font-size: 20px;
+	margin: -31px 5px 0px -16px;
+	font-weight: bold;
+	display: none;
+	cursor: pointer;
+	color: #3DB97F;
+}
+
+.removeAsset:hover {
+	color: pink;
+}
+
+.removeAsset {
+	float:top;
+	float: right;
+	font-size: 17px;
+	margin: -28px 5px 0px -16px;
+	font-weight: bold;
+	display: none;
+	cursor: pointer;
+	color: red;
+}
+
+.thumbnail_image {
+	height:60px;
+	width:60px;
+}
+
+.emptySearchResult,
+.emptyListResult {
+	text-align: center;
+}
+
+#assetsInProject {
+	overflow-y: auto;
+	height: 404px;
+	margin: 0 auto;
+	padding: 10px;
+}
+
+#buttonHelpMenu {
+	border: 1px solid #C5C5C5;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	margin-left: 4px;
+	border-radius: 10px;
+	color: #C5C5C5;
+	cursor: pointer;
+}
+
+#buttonHelpMenu:hover {
+	border: 1px solid #D43F3A;
+	color: #D43F3A;
+}
+
+#controlHelpMenu {
+	padding: 10px;
+	background-color: #4B78A8 !important;
+	box-shadow: 0 0 3px black;
+}
+
+#closeShapeHelp {
+    color: lightgrey;
+    font-size: 28px;
+    float: right;
+    margin-top: -15px;
+    cursor: pointer;
+  }
+
+#closeShapeHelp:hover {
+	color: #D43F3A;
+	font-weight:bold;
+}

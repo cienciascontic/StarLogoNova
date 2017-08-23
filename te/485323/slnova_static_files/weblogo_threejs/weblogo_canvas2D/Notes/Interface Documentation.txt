@@ -1,0 +1,37 @@
+2D Canvas Renderer Interface to Engine:
+
+	To instantiate the renderer and obtain an interface to it, create a Viewport object (passing the necessary div element id argument). The entire interface is accessable
+	through the Viewport object.
+
+	The following interface methods are methods of the Viewport class that are shared in common with the interface of the 3d renderer: 
+		- Viewport.animate(): begins animation
+		- Viewport.loadModel(): request renderer to load model asset
+	See Viewport.js for specs/descriptions of usage. 
+	
+	The following interface methods are methods of the Viewport class that are not shared in common with the interface of the 3d renderer:
+		- Viewport.enableTerrain(): Turns on or off rendering of terrain
+		- Viewport.enableZOrdering(): Turns on or off whether the renderer sorts agents based on distance from camera for rendering.
+		- Viewport.startDrawing(): Tell the renderer to begin drawing frames if it is not doing so already.
+		- Viewport.stopDrawing(): Tell the renderer to stop drawing frames if it is currently doing so.
+		- Viewport.startAnimating(): Tell the renderer to start calling the on-animation callback each frame if it's not doing so already.
+		- Viewport.stopAnimating(): Tell teh renderer to stop calling the on-animation callback each frame if it's doing so currently.
+		- Viewport.startDrawingAndAnimating(): Same as calling both startDrawing() and startAnimating().
+		- Viewport.stopDrawingAndAnimating(): Same as calling both stopDrawing() and stopAnimating().
+		- Viewport.setAnimationCallback(): Give the renderer a callback function to call on a per-frame basis.
+	See Viewport.js for specs/descriptions of usage.
+
+
+	The following interface methods are methods of the terrain property of the Viewport class:
+		- Viewport.terrain.clear()
+		- Viewport.terrain.stamp()
+		- Viewport.terrain.circle()
+		- Viewport.terrain.gridSquare()
+		- Viewport.terrain.line()
+		- Viewport.terrain.rgba()
+	See Terrain.js for specs.descriptions of usage.	
+
+
+2D Canvas Renderer Interface to User:
+
+	- The Stats class is responsible for displaying frame-rate statistics to the user.
+	- Viewport class is responible for displaying, resizing, and rendering to a canvas showing the scene.

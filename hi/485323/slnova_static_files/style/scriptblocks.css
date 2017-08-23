@@ -1,0 +1,331 @@
+.sbPage, .sbDrawer, .sbPageHolder, .sbDrawerHolder, .sbTrashBin, .sbCopyPasteBar, .sbContext {
+	/* Disable default HTML text selection */
+	-moz-user-select: -moz-none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;
+
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+
+	margin: 0px;
+	padding: 0px;
+
+	font-family: 'Open Sans', 'sans-serif';
+	font-size: 15px;
+}
+
+.sbUnselectable {
+	/* Disable default HTML text selection */
+	-moz-user-select: -moz-none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	user-select: none;
+}
+
+
+.sbPageHolder {
+	position: relative;
+	border: 1px solid #BBB;
+	padding: 0px;
+	margin: 0px;
+	overflow: auto;
+	float:left;
+}
+
+
+.sbDrawerHolder {
+	position: relative;
+	width: 200px;
+	top: 0px;
+	left: auto !important; /* this fixes a problem with jQuery resizable on Safari in TaleBlazer */
+	min-width: 100px;
+	min-height: 200px;
+	height: auto;
+	padding: 0px 2px;
+	margin: 0px 5px;
+	float: left;
+}
+
+.sbDrawer:last-child {
+	min-height: 110%;
+}
+
+.sbDrawers {
+	overflow: auto;
+}
+
+.sbPage {
+	position: absolute;
+	overflow: hidden;
+	background-color: #FFF;
+	padding:5px;
+}
+
+.sbDrawer {
+	position: relative;
+	padding: 5px 0px 10px 5px;
+	background-color: #BBB;
+	overflow: initial;
+	height: auto;
+	overflow: hidden;
+}
+
+.sbCopyBtn {
+	background-image: url('img/copy.png');
+	background-position: center 0px;
+	background-repeat: no-repeat;
+	background-size: 22px 22px;
+	cursor: pointer;
+	height: 22px;
+
+}
+
+.sbBtnWrapper {
+	display: inline-block;
+	margin: 0px 6px 6px 6px;
+	padding: 2px;
+	color: black;
+	background-color: white;
+}
+
+.sbBtnWrapper:hover {
+	color: #124d77;
+}
+
+.sbBtnWrapper:hover{
+	-ms-transition: background 0.3s ease;
+	-moz-transition: background 0.3s ease;
+	-webkit-transition: background 0.3s ease;
+	transition: background 0.3s ease;
+	background-color: #DDD;
+}
+
+
+.sbCopyBtnWrapper:active .sbCopyBtn{
+	background-image: url('img/copy_blue.png');
+	background-position: center 0px;
+	background-repeat: no-repeat;
+	background-size: 22px 22px;
+	cursor: pointer;
+	height: 22px;
+	background-position: center 1px;
+}
+
+.sbBtnText {
+	text-align: center;
+	font-size: smaller;
+	width: 30px;
+	cursor: pointer;
+
+}
+
+.sbCutBtn {
+	background-image:url('img/cut.png');
+	background-position: center 0px;
+	background-repeat: no-repeat;
+	background-size: 22px 22px;
+	cursor: pointer;
+	height: 22px;
+}
+
+.sbCutBtnWrapper:active .sbCutBtn{
+	background-image: url('img/cut_blue.png');
+	background-position: center 0px;
+	background-repeat: no-repeat;
+	background-size: 22px 22px;
+	cursor: pointer;
+	height: 22px;
+	background-position: center 1px;
+}
+
+.sbPasteBtn {
+	background-image:url('img/paste.png');
+	background-position: center 0px;
+	background-repeat: no-repeat;
+	background-size: 22px 22px;
+	cursor: pointer;
+	height: 22px;
+}
+
+.sbPasteBtnWrapper:active .sbPasteBtn{
+	background-image: url('img/paste_blue.png');
+	background-position: center 0px;
+	background-repeat: no-repeat;
+	background-size: 22px 22px;
+	cursor: pointer;
+	height: 22px;
+	background-position: center 1px;
+}
+
+.sbToolBar {
+	height: auto;
+	top: 0px;
+	right: 1px;
+	min-width: 400px;
+	position: relative;
+	z-index: 100;
+}
+
+.sbTrashBin {
+	background-image:url('img/trash.png');
+	background-position: 10px 5px;
+	background-size: 28px 32px;
+	background-repeat: no-repeat;
+	cursor: arrow;
+	background-color: inherit;
+	font-size: 13px;
+	width: 100px;
+	height: 50px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	border: 3px dashed #333;
+	text-align: center;
+	background-color: #DDD;
+	margin-left: 5px;
+	padding-top: 3px;
+	padding-left: 30px;
+}
+
+.sbSticky.sbFixed {
+	position: fixed;
+}
+
+.sbTrashBinOpen {
+	background-color: #E8ACAF;
+	border: 3px dashed #F22260;
+	/*-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	transition: all 0.3s ease;*/
+}
+
+.sbCopyPasteBar {
+	position: absolute;
+	top: 8px;
+	right: 100px;
+	margin-right: 15px;
+	/*-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	transition: all 0.3s ease;*/
+}
+
+.sbSelection {
+	position: absolute;
+	border: 2px dashed #9C6;
+}
+
+
+.sbPageTab.goog-tab {
+  background: #ddd;
+  border: 1px solid #CCC;
+  color: black;
+  cursor: default;
+  padding: 5px 8px;
+  position: relative;
+  text-decoration: none;
+  z-index: 1;
+}
+
+/* State: Hover */
+.sbPageTab.goog-tab-hover {
+  background: #eee;
+}
+
+/* State: Disabled */
+.sbPageTab.goog-tab-disabled {
+  background: #ccc;
+  border-color: #ccc;
+  color: #fff;
+}
+/* State: Selected */
+.sbPageTab.goog-tab-selected {
+  background: #fff !important; /* Selected trumps hover. */
+}
+
+.sbPageTabBar.goog-tab-bar-top {
+	height: auto;
+	overflow:hidden;
+	height:auto;
+	background-color: transparent;
+	border-bottom: none !important;
+	padding-top: 0px !important;
+}
+
+.sbPageTabBar.goog-tab-bar-top .goog-tab-selected {
+	top: 0px;
+	border-bottom: none !important;
+}
+
+.sbDrawerLabel {
+	-webkit-appearance: none;
+	appearance: none;
+	-moz-appearance: none;
+
+	padding: 0px 0px 0px 10px;
+	margin: 0px 0px 2px 0px!important;
+	height: 25px;
+	width: 100% !important;
+	font-size: 14px;
+	font-weight: bold;
+	background-image: url('img/downArrow.png');
+	background-repeat: no-repeat;
+	background-position: center right;
+	border-radius: 0px;
+	border: 2px #BBB solid;
+}
+
+.sbHidden {
+	display: none;
+}
+
+.sbContext {
+	position: absolute;
+	cursor:default;
+	z-index: 99;
+	height: auto;
+	width: auto;
+}
+
+.sbContext ul{
+	padding: 0px 0px 0px 0px;
+ 	border-radius: 5px;
+	border: 1px solid grey;
+	box-shadow: 2px 2px 2px #888888;
+	overflow:hidden;
+	margin: 0px;
+}
+
+.sbContext li{
+	display: block;
+	padding: 5px 10px;
+	text-decoration: none;
+	color: black;
+	background: #F3F3F3;
+	border-bottom: 1px solid grey;
+	font-family: 'Arial';
+	font-size: 12px;
+}
+
+.sbContext li:hover {
+	background: #1a85ff;
+	color: #FFF;
+}
+
+.sbContext div{
+	display: block;
+	position: absolute;
+}
+
+.sbContext li.disabled{
+	color: gray;
+	background:#F3F3F3;
+}
+
+.sbContext li.disabled:hover {
+	border:0px;
+	background:#F3F3F3;
+}
