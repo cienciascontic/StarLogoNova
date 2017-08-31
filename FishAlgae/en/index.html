@@ -148,6 +148,7 @@
         function createImageBitmap(source) {
             return new Promise(function(resolve, reject) {
                 var image = new Image();
+                image.crossOrigin = "Anonymous";
                 if (source.toBlob) {
                     source.toBlob(function(blob) {
                         var url = URL.createObjectURL(blob);
@@ -183,7 +184,7 @@
     //********************************************************
 
     </script>
-    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/three.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/three.js"></script>
     <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/stats.min.js"></script>
     <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/OrbitControls.js"></script>
     <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/MTLLoader.js"></script>
