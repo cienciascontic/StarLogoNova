@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-    <title>Consumer Interaction</title>
+    <title>Interacción de un consumidor</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <link type="text/css" href="slnova_static_files/style/bootstrap.css" rel="stylesheet" media="screen" />
@@ -248,7 +248,7 @@
         <div id="wcontainer">
             <div id="container" style="height: 600px;">
                 <div id="speedSlider">
-                    Engine speed:
+                    Velocidad de ejecución:
                     <span id="speedSliderValue">5</span>
                     <input id="slider" type="range" min="1" value="5" list="steplist" oninput="changeSpeedSlider();" onchange="changeSpeedSlider();">
                     <datalist id="steplist">
@@ -354,7 +354,7 @@
             </script>
             <div id="assetsAvailable">
                 <div class="emptySearchResult">
-                    No assets available.
+                    No hay recursos disponibles.
                 </div>
                 <script>
                     /* When "play" is clicked
@@ -403,7 +403,7 @@
                     });
                 </script>
                 <div id="assetCreate" style="margin:4px 0px 0px 6px;">
-                    <button onclick="popupAsset();" id="assetCreateButton"><a>Upload your own</a></button>
+                    <button onclick="popupAsset();" id="assetCreateButton"><a>Subir su propio</a></button>
                 </div>
                 <script>
                     function popupAsset() {
@@ -412,7 +412,7 @@
 
                             // TODO: This needs to be changed once ModelViewer supports software rendering so that createAsset always pops up.
                             if (render_mode != "3d")
-                                alert("Must be in 3D mode to upload shapes.");
+                                alert("Debe estar en modo 3D para subir figuras.");
                             else
                                 popup('createAsset', true);
                         } else {
@@ -423,10 +423,10 @@
             </div>
         </div>
         <div id="assetList" class="assetDiv" style="height:460px;width:240px;padding-right:0px;margin-right:0px">
-            <h3 class="asset-header">Shapes in this Project</h3>
+            <h3 class="asset-header">Figuras en este proyecto</h3>
             <div id="assetsInProject" style="height:360px;">
                 <div class="emptyListResult">
-                    No assets in this project.
+                    No hay recursos en este proyecto.
                 </div>
             </div>
         </div>
@@ -475,7 +475,7 @@
                 width: 250px;
             }
         </style>
-        <h3 class="asset-header">Upload a Shape</h3>
+        <h3 class="asset-header">Subir una Figura</h3>
         <div id="asset-form-inline">
             <form enctype="multipart/form-data" method="POST" name="assetform" id="assetformid">
                 <input type='hidden' name='csrfmiddlewaretoken' value='yAmpqmIq9nYHi5btX8VwSfUFer0NkFYB' />
@@ -487,12 +487,12 @@
                 <div style="padding: 15px; width:32%;float:left;" id="shapeFileThumbnail">
                     File to upload to S3:
                     <input name="file" type="file" id="asset_file" style="width:200px;">
-                    <br> Thumbnail:
+                    <br> Miniatura:
                     <input name="thumbnail" type="file" id="asset_thumbnail" style="width:200px;">
                 </div>
                 <div id="shapePreview" style="float:left; width:38%; height:140px; background-color: black; position: relative;">
                     <div id="loadingModel" class="loadingModelPopup">
-                        <p id="modelloadinglabel">Loading...</p>
+                        <p id="modelloadinglabel">Cargando...</p>
                         <div id="modelprogressbar" style="margin: auto;">
                             <div id="modelindicator"></div>
                         </div>
@@ -534,7 +534,7 @@
                 <br>
                 <center>
                     <div id="asset_submit">
-                        <input style="background-color:#669933;" type="submit" value="Create my asset!" class="btn btn-lg">
+                        <input style="background-color:#669933;" type="submit" value="¡Crear mi recurso!" class="btn btn-lg">
                     </div>
                 </center>
             </form>
@@ -553,20 +553,20 @@
             };
         </script>
         <div id="assetSearch" class="assetDiv" style="height:460px;width:440px;">
-            <h3 class="asset-header">Search for Sounds</h3>
+            <h3 class="asset-header">Buscar Sonidos</h3>
             <div class="input-group" id="search-group">
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:110px" id="selector-btn"><span id="selection" class="pull-left">All Assets</span><span class="caret pull-right" style="margin-top: 7px"></span></button>
                     <ul class="dropdown-menu" id="selector" style="min-width:auto!important;">
-                        <li><a href="#">All Assets</a></li>
-                        <li><a href="#">3D Models</a></li>
-                        <li><a href="#">Tags</a></li>
+                        <li><a href="#">Todos los recursos</a></li>
+                        <li><a href="#">Modelos 3D</a></li>
+                        <li><a href="#">Etiquetas</a></li>
                     </ul>
                 </div>
                 <select name="category" id="category_select" class="form-control" style="display:none;">
-                    <option value="All Assets">All Assets</option>
-                    <option value="3D Models">3D Models</option>
-                    <option value="Tags">Tags</option>
+                    <option value="Todos los recursos">All Assets</option>
+                    <option value="Modelos 3D">3D Models</option>
+                    <option value="Etiquetas">Tags</option>
                 </select><span class="glyphicon glyphicon-search" id="search-con"></span>
                 <input type="text" style="height:33px !important; width:300px; margin-right: 5px;padding:6px 32px !important; border: 1px solid #ccc !important" name="q" class="form-control" placeholder="Search" id="inp-search">
             </div>
@@ -658,7 +658,7 @@
             </div>
         </div>
         <div id="assetList" class="assetDiv" style="height:460px;width:240px;padding-right:0px;margin-right:0px">
-            <h3 class="asset-header">Sounds in this Project</h3>
+            <h3 class="asset-header">Sonidos en este proyecto</h3>
             <div id="assetsInProject" style="height:360px;">
                 <div class="emptyListResult">
                     No assets in this project.
@@ -723,7 +723,7 @@
         </div>
     </div>
     <div id="loadingAsset" class="assetPopUpWindow" style="display:none;height:50px;width:100px;border-radius:5px;padding-right:0px;background-color:#669933;color:white;">
-        Loading ...
+        Cargando ...
     </div>
     <!--An invisible div for a progress panel indicating progress on loading an asset to be used in spaceland. This div is
 	intended to be cloned and inserted into the document to appear over the rendering canvas. TODO: Might be a good idea to 
@@ -772,7 +772,7 @@
     <!--Template div for a loading panel. Gets cloned to create new panels at runtime. Can push into a stack or place in the
 	document manually.-->
     <div id="loadingPanel" class="loadingPanel">
-        <p class="message">Loading...</p>
+        <p class="message">Cargando...</p>
         <!--Message displayed above loading progress bar-->
         <div class="progressBar">
             <!--The progress bar itself-->
@@ -897,7 +897,7 @@
             <div id="footer-links">
                 <div class="footer-info">
                     <p>
-                        StarLogo Nova is a project of the MIT Scheller Teacher Education Program</a></p>
+                        StarLogo Nova es un proyecto del MIT Scheller Teacher Education Program</a></p>
                 </div>
                 <div id="step-logo">
                     <img src="slnova_static_files/images/step_web_on(bigger).svg" />
