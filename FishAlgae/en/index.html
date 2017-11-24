@@ -214,20 +214,20 @@
         <div id="toolbar" class="navbar navbar-inverse navbar-fixed-top" role="navigation"><span id="logo"><a href="http://54.166.21.191"><img src="slnova_static_files/images/FireballTurtle.png" style="width: 65px;" /></a><a href="http://54.166.21.191"><img src="slnova_static_files/images/logocurve.png" style="width: 100px;vertical-align: -50%;" /></a></span>
             <div class="navbar-inner">
                 <ul class="nav navbar-nav">
-                    <li id="home"><a href="http://54.166.21.191">Home</a></li>
-                    <li id="newProjectLi" style="display:none"><a href="javascript:void(0);">New Project</a></li>
+                    <li id="home"><a href="http://54.166.21.191">Inicio</a></li>
+                    <li id="newProjectLi" style="display:none"><a href="javascript:void(0);">Nuevo proyecto</a></li>
                     <li id="remixLi" style="display:none"><a href="javascript:void(0);" id="remixBtn"> Remix </a></li>
-                    <li id="checkpointLi" style="display:none"><a href="javascript:void(0);" id="checkpointBtn"> Save Version </a></li>
+                    <li id="checkpointLi" style="display:none"><a href="javascript:void(0);" id="checkpointBtn"> Guardar Versión </a></li>
                     <li id="manualAuto" style="display:none">
                         <a href="javascript:void(0);" id="manualAutoBtn" class="disabledNavBarLi">
-                            <div id="saveJSONBtn"> Saved </div>
+                            <div id="saveJSONBtn"> Guardado </div>
                         </a>
                     </li>
                     <li style="padding-left:10px;"><a href="javascript:void(0);" > </a></li>
-                    <li id="runLi"><a href="javascript:void(0);" id="runBtn"> Run Code </a></li>
+                    <li id="runLi"><a href="javascript:void(0);" id="runBtn"> Ejecutar código </a></li>
                     <li style="padding-left:10px;"><a href="javascript:void(0);" > </a></li>
-                    <li id="viewLi"><a onclick="return toggleMode();" id="viewBtn"> View Mode </a></li>
-                    <li id="editLi"><a onclick="return toggleMode();" id="editBtn"> Edit Mode </a></li>
+                    <li id="viewLi"><a onclick="return toggleMode();" id="viewBtn"> Modo Vista </a></li>
+                    <li id="editLi"><a onclick="return toggleMode();" id="editBtn"> Modo Edición </a></li>
                     <li id="statusBarLi"></li>
                 </ul>
             </div>
@@ -286,22 +286,22 @@
         <div id='popUpBoxLarge' style='display:none'></div>
         <div id="selectProjectTypeDiv" style="display:none;">
             <center>
-                Please choose the type of project that you'd like to start with:
+                Elegir el tipo de proyecto para empezar:
             </center>
             <br />
-            <input type="radio" name="project" value="blank" /> Blank Project
+            <input type="radio" name="project" value="blank" /> Proyecto en blanco
             <br />
-            <input type="radio" name="project" value="action" /> First-Person Action Game
+            <input type="radio" name="project" value="action" /> Juego de acción en primera persona
             <br />
-            <input type="radio" name="project" value="biology" /> Biology Simulation
+            <input type="radio" name="project" value="biology" /> Simulación de Biología
             <br />
             <center>
                 <button id="projectTypeBtn" onclick="create();">
-                    Submit
+                    Enviar
                 </button>
             </center>
             <button id="projectTypeBtn" onclick="popup('selectProjectTypeDiv');">
-                Cancel
+                Cancelar
             </button>
         </div>
     </div>
@@ -318,20 +318,20 @@
             };
         </script>
         <div id="assetSearch" class="assetDiv" style="height:460px;width:440px;">
-            <h3 class="asset-header">Search for Shapes</h3>
+            <h3 class="asset-header">Buscar Figuras</h3>
             <div class="input-group" id="search-group">
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:110px" id="selector-btn"><span id="selection" class="pull-left">All Assets</span><span class="caret pull-right" style="margin-top: 7px"></span></button>
                     <ul class="dropdown-menu" id="selector" style="min-width:auto!important;">
-                        <li><a href="#">All Assets</a></li>
-                        <li><a href="#">3D Models</a></li>
-                        <li><a href="#">Tags</a></li>
+                        <li><a href="#">Todos los recursos</a></li>
+                        <li><a href="#">Modelos 3D</a></li>
+                        <li><a href="#">Etiquetas</a></li>
                     </ul>
                 </div>
                 <select name="category" id="category_select" class="form-control" style="display:none;">
-                    <option value="All Assets">All Assets</option>
-                    <option value="3D Models">3D Models</option>
-                    <option value="Tags">Tags</option>
+                    <option value="Todos los recursos">All Assets</option>
+                    <option value="Modelos 3">3D Models</option>
+                    <option value="Etiquetas">Tags</option>
                 </select><span class="glyphicon glyphicon-search" id="search-con"></span>
                 <input type="text" style="height:33px !important; width:300px; margin-right: 5px;padding:6px 32px !important; border: 1px solid #ccc !important" name="q" class="form-control" placeholder="Search" id="inp-search">
             </div>
