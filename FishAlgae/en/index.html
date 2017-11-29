@@ -236,7 +236,7 @@
     <div id="project_info">
         <div id="info" class="row-fluid">
             <div class="col-xs-6 col-md-4">
-                <input type="text" id="id_title" onChange="updateTitle();" value="Consumer Interaction" style="width:95%">
+                <input type="text" id="id_title" onChange="updateTitle();" value="Interacción de un consumidor" style="width:95%">
                 <div>
                     <textarea id="d" rows=11 cols=50 onChange="updateDescription();"></textarea>
                 </div>
@@ -266,7 +266,7 @@
                 <a href="dummydomain"><img src="slnova_static_files/images/FireballTurtle.png" style="width:36px" /><img src="slnova_static_files/images/logocurve.png" style="width:100px; vertical-align: -50%;"></a>
             </div>
             <div id="pwidget">
-                <div id="loading" align="center" style="color: #FFFFFF;"><b>Loading...</b></div>
+                <div id="loading" align="center" style="color: #FFFFFF;"><b>Cargando...</b></div>
                 <div id="progressbar">
                     <div id="indicator">
                         <script type="application/javascript">
@@ -638,7 +638,7 @@
                     });
                 </script>
                 <div id="assetCreate" style="margin:4px 0px 0px 6px;">
-                    <button onclick="popupAsset();" id="assetCreateButton"><a>Upload your own</a></button>
+                    <button onclick="popupAsset();" id="assetCreateButton"><a>Subir su propio</a></button>
                 </div>
                 <script>
                     function popupAsset() {
@@ -647,7 +647,7 @@
 
                             // TODO: This needs to be changed once ModelViewer supports software rendering so that createAsset always pops up.
                             if (render_mode != "3d")
-                                alert("Must be in 3D mode to upload shapes.");
+                                alert("Debe estar en modo 3D para poder subir figuras.");
                             else
                                 popup('createAsset', true);
                         } else {
@@ -682,7 +682,7 @@
             };
         </script>
         <br>
-        <h3 class="asset-header" style="margin-top:-24px;">Save Sound</h3>
+        <h3 class="asset-header" style="margin-top:-24px;">Guardar sonido</h3>
         <div id="sound-form-inline">
             <form enctype="multipart/form-data" method="POST" name="soundform" id="soundformid">
                 <input type='hidden' name='csrfmiddlewaretoken' value='yAmpqmIq9nYHi5btX8VwSfUFer0NkFYB' />
