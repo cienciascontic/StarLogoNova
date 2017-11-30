@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Interacción de un consumidor</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link type="text/css" href="slnova_static_files/style/bootstrap.css" rel="stylesheet" media="screen" />
+    <link type="text/css" href="slnova_static_files/style/navbar.css" rel="stylesheet" media="screen" />
+    <link type="text/css" href="slnova_static_files/style/footer.css" rel="stylesheet" media="screen" />
+    <link type="text/css" href="slnova_static_files/style/bootstrapresponsive.css" rel="stylesheet" media="screen" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/jquery-ui.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/style/scriptblocks.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/style/scriptblockscustomizations.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/style/closure/tab.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/style/closure/tabbar.css" />
+    <link type="text/css" rel="stylesheet" href="" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/style/djangoweblogo.css" media="screen" />
+    <link type="text/css" rel="prev" href="../csrftoken/" />
+    <link type="text/css" href="slnova_static_files/style/assets.css" rel="stylesheet" media="screen" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/widgets.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/common.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/button.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/custombutton.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/menu.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/menubutton.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/menuitem.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/menubar.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/style/colorpicker-simplegrid.css" />
+    <link type="text/css" rel="stylesheet" href="slnova_static_files/WLWidgets/libs/handsontable/handsontable.full.min.css" />
+    <link type="text/css" href="slnova_static_files/style/project_info.css" rel="stylesheet" media="screen" />
+    <link type="text/css" href="slnova_static_files/style/project_tags.css" rel="stylesheet" media="screen" />
+    <script type="application/javascript" src="slnova_static_files/jquery.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/bootstrap.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/javascript/post.js"></script>
+    <script type="application/javascript" src="slnova_static_files/jquery.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/jquery-ui.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/pako.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/WLWidgets/libs/handsontable/handsontable.full.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/WLWidgets/libs/dygraph-combined-dev.js"></script>
+    <!--script src="http://localhost:9810/compile?id=test-widgets"></script-->
+    <script type="application/javascript" src="slnova_static_files/scriptblocks_compiled.js"></script>
+    <script type="application/javascript" src="slnova_static_files/ts/app.js"></script>
+    <script type="application/javascript" src="slnova_static_files/javascript/djangoweblogo.js"></script>
+    <script type="application/javascript" src="slnova_static_files/AuO.js"></script>
+    <script type="application/javascript" src="slnova_static_files/javascript/howler.js"></script>
+    <script type="application/javascript" src="slnova_static_files/javascript/asset_loading_panel.js"></script>
+    <script type="application/javascript" src="slnova_static_files/javascript/asset_create.js"></script>
+
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+        precision highp float;
+
+        uniform mat4 modelMatrix;
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+
+        attribute vec3 position;
+        attribute vec3 scale;
+        attribute vec4 orientation;
+        attribute vec3 offset;
+        attribute vec3 normal;
+        attribute vec2 uv;
+
+        attribute vec3 color;
+
+        varying vec2 vUv;
+        varying vec3 vPosition;
+        varying vec3 vColor;
+        varying vec3 vNormal;
+
+        void main()   {
+
+            vec3 vPosition = position*scale;
+            vec3 vcV = cross(orientation.xyz, vPosition);
+            vPosition = vcV * (2.0 * orientation.w) + (cross(orientation.xyz, vcV) * 2.0 + vPosition);
+            vPosition += offset;
+
+            vNormal = normal;
+            vec3 vcN = cross(orientation.xyz, normal);
+            vNormal = vcN * (2.0 * orientation.w) + (cross(orientation.xyz, vcN) * 2.0 + vNormal);
+            vec4 mcN = modelMatrix*vec4(vNormal, 1.0);
+            vNormal = mcN.xyz;
+
+            vColor = color;
+            vUv = uv;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( vPosition, 1.0 );
+
+        }
+
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        precision highp float;
+
+        varying vec2 vUv;
+        varying vec3 vPosition;
+        varying vec3 vColor;
+        varying vec3 vNormal;
+
+        uniform int hasTex;
+        uniform sampler2D tex;
+        uniform vec3 light;
+
+        void main()   {
+
+            float intensity = max( 0.0, dot(normalize(vNormal.xyz), normalize(light)) );
+            vec3 color = vColor*(intensity*0.8+0.2);
+            if (hasTex == 1) {
+              color = texture2D(tex, vUv).xyz*color; // add texture
+            }
+            gl_FragColor = vec4(color, 1.0);
+
+        }
+
+    </script>
+
+    <!--script type="application/javascript" src="slnova_static_files/javascript/assets.js"></script-->
+    <script type="application/javascript">
+        console = window.console || {
+            log: function() {}
+        };
+        //<!-- For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. -->
+
+        var projectStr;
+        var render_mode = "2d";
+        var isLatestRevision = false;
+
+        if (!HTMLCanvasElement.prototype.toBlob) {
+            Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+                value: function(callback, type, quality) {
+
+                    var binStr = atob(this.toDataURL(type, quality).split(',')[1]),
+                        len = binStr.length,
+                        arr = new Uint8Array(len);
+
+                    for (var i = 0; i < len; i++) {
+                        arr[i] = binStr.charCodeAt(i);
+                    }
+
+                    callback(new Blob([arr], {
+                        type: type || 'image/png'
+                    }));
+                }
+            });
+        }
+
+        function createImageBitmap(source) {
+            return new Promise(function(resolve, reject) {
+                var image = new Image();
+                if (source.toBlob) {
+                    source.toBlob(function(blob) {
+                        var url = URL.createObjectURL(blob);
+
+                        image.onload = function() {
+                            // no longer need to read the blob so it's revoked
+                            URL.revokeObjectURL(url);
+                            resolve(image);
+                        };
+                        image.onerror = function() {
+                            reject(new Error('Could not load image at ' + url));
+                        };
+
+                        image.src = url;
+                    });
+                } else {
+                    image.onload = function() {
+                        resolve(image);
+                    };
+
+                    image.onerror = function() {
+                        reject(new Error('Could not load image at ' + source.currentSrc));
+                    };
+                    console.log(source);
+                    image.src = source.currentSrc;
+                }
+            });
+        }
+
+    // ********************************************************
+    // OVERWRITE THIS WITH THE CONTENTS OF THE PROJECT TO LOAD
+    var project = {"version":"beta2.4", "otherInfo":{},"widgets":[{"widgetType":"WebLand.Widgets::ToggleButtonWidget","saveInfo":{"properties":{"label":"Ejecutar"},"name":"Ejecutar"},"x_position":"73","y_position":"-14"},{"widgetType":"WebLand.Widgets::ButtonWidget","saveInfo":{"properties":{"label":"setear"},"name":"setear"},"x_position":"-1","y_position":"-14"},{"widgetType":"WebLand.Widgets::HSliderWidget","saveInfo":{"properties":{"currentPos":1,"dataTipPrecision":0,"x_position":5,"stepSize":1,"snapInterval":1,"maximum":10,"minimum":0,"y_position":26,"title":"Cantidad%20Inicial%20de%20Peces"},"name":"Cantidad inicial de peces"},"x_position":"5","y_position":"26"},{"widgetType":"WebLand.Widgets::HSliderWidget","saveInfo":{"properties":{"currentPos":100,"dataTipPrecision":0,"x_position":3,"stepSize":10,"snapInterval":10,"maximum":300,"minimum":100,"y_position":106,"title":"Cantidad%20Inicial%20de%20Algas"},"name":"Cantidad inicial de algas"},"x_position":"3","y_position":"106"},{"widgetType":"WebLand.Widgets::HSliderWidget","saveInfo":{"properties":{"currentPos":1.685,"dataTipPrecision":3,"x_position":1,"stepSize":0.001,"snapInterval":0.001,"maximum":10,"minimum":0,"y_position":277,"title":"Hambre"},"name":"Hambre"},"x_position":"1","y_position":"277"},{"widgetType":"WebLand.Widgets::HSliderWidget","saveInfo":{"properties":{"currentPos":1.348,"dataTipPrecision":3,"x_position":1,"stepSize":0.001,"snapInterval":0.001,"maximum":10,"minimum":0,"y_position":186,"title":"Tasa%20de%20Reproducción%20Algas"},"name":"Tasa de reproducción de algas"},"x_position":"1","y_position":"186"},{"widgetType":"WebLand.Widgets::LineGraphWidget","saveInfo":{"properties":{"yTitle":"Población","xTitle":"Tiempo","series":[{"name":"Algas","color":14976769},{"name":"Peces","color":52428}],"title":"Población%20de%20Peces%20y%20Algas"},"name":"Población de peces y algas"},"x_position":"651","y_position":"-16"},{"widgetType":"WebLand.Widgets::DataBoxWidget","saveInfo":{"properties":{"value":"100","title":"Algas"},"name":"Algas"},"x_position":"208","y_position":"-12"},{"widgetType":"WebLand.Widgets::DataBoxWidget","saveInfo":{"properties":{"value":"1","title":"Peces"},"name":"Peces"},"x_position":"401","y_position":"-14"},{"widgetType":"WebLand.Widgets::DataBoxWidget","saveInfo":{"properties":{"value":"100","title":"MaxAlgas"},"name":"MaxAlgas"},"x_position":"8","y_position":"462"},{"widgetType":"WebLand.Widgets::DataBoxWidget","saveInfo":{"properties":{"value":"100","title":"Min%20Algas"},"name":"Min%20Algas"},"x_position":"6","y_position":"462"},{"widgetType":"WebLand.Widgets::DataBoxWidget","saveInfo":{"properties":{"value":"1","title":"MaxPeces"},"name":"MaxPeces"},"x_position":"6","y_position":"462"},{"widgetType":"WebLand.Widgets::DataBoxWidget","saveInfo":{"properties":{"value":"","title":"Puntaje"},"name":"Score"},"x_position":"6","y_position":"460"}],"agents":"","breeds":[{"name":"Peces", "defaultShape":"box", "customTraits":[{"defaultValue":"","traitType":"data","name":"Strength%20of%20fish"}], "blocks":[{"id":"1", "spec":{"name":"wgt-button-toggle","label":"while @buttonArg toggled \n @arg1","arguments":[{"name":"buttonArg","dataType":"none","socketType":"list","options":[{"label":"Ejecutar","value":"Ejecutar"}],"value":"Ejecutar"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":[],"color":"#99CC66","returnType":"command","position":{"x":16,"y":12}}, "connectedblocks":[{"socket": "1", "id": "2"}]}, {"id":"2", "spec":{"name":"move-left","label":"left by @degs degs","arguments":[{"name":"degs","dataType":"string","socketType":"internal"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "3"},{"socket": "after", "id": "4"}]}, {"id":"3", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"20"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"4", "spec":{"name":"move-right","label":"right by @degs degs","arguments":[{"name":"degs","dataType":"string","socketType":"internal"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "5"},{"socket": "after", "id": "6"}]}, {"id":"5", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"20"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"6", "spec":{"name":"ifelse","label":"if @test \n @then \nelse \n @else","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"},{"name":"else","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "7"},{"socket": "1", "id": "8"},{"socket": "2", "id": "9"},{"socket": "after", "id": "10"}]}, {"id":"7", "spec":{"name":"comp-less-than","label":"@arg0 < @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal","value":"50"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "11"}]}, {"id":"8", "spec":{"name":"move-forward","label":"forward @steps","arguments":[{"name":"steps","dataType":"string","socketType":"internal","value":"1"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[]}, {"id":"9", "spec":{"name":"move-forward","label":"forward @steps","arguments":[{"name":"steps","dataType":"string","socketType":"internal","value":"2"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[]}, {"id":"10", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "12"},{"socket": "1", "id": "13"},{"socket": "after", "id": "14"}]}, {"id":"11", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20fish"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"12", "spec":{"name":"comp-equals","label":"@arg0 = @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal","value":"0"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "15"}]}, {"id":"13", "spec":{"name":"agt-delete","label":"delete","arguments":[],"connections":["before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[]}, {"id":"14", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20fish"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "16"}]}, {"id":"15", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20fish"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"16", "spec":{"name":"calc-difference","label":"@arg1 - @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal","value":"0.5"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "17"}]}, {"id":"17", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20fish"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"18", "spec":{"name":"collision","label":"on collision with @breed\ndo @commands","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"commands","dataType":"command","socketType":"nested"}],"connections":[],"color":"#999999","returnType":"command","position":{"x":362,"y":28}}, "connectedblocks":[{"socket": "1", "id": "19"}]}, {"id":"19", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "20"},{"socket": "1", "id": "21"}]}, {"id":"20", "spec":{"name":"comp-less-than","label":"@arg0 < @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "22"},{"socket": "1", "id": "23"}]}, {"id":"21", "spec":{"name":"agt-delete-agent","label":"delete agent @agent","arguments":[{"name":"agent","dataType":"string","socketType":"internal"}],"connections":["after","before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "28"},{"socket": "after", "id": "29"}]}, {"id":"22", "spec":{"name":"calc-product","label":"@arg1 x @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "24"},{"socket": "1", "id": "25"}]}, {"id":"23", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"}],"value":"Hambre"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"24", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"6"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"25", "spec":{"name":"calc-difference","label":"@arg1 - @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal","value":"2"},{"name":"arg2","dataType":"string","socketType":"internal"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "1", "id": "26"}]}, {"id":"26", "spec":{"name":"calc-quotient","label":"@arg1 / @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal","value":"50"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "27"}]}, {"id":"27", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20fish"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"28", "spec":{"name":"collidee","label":"collidee","arguments":[],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"29", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20fish"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "30"}]}, {"id":"30", "spec":{"name":"calc-sum","label":"@arg1 + @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal","value":"1"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "31"}]}, {"id":"31", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20fish"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"32", "spec":{"name":"wgt-button-toggle","label":"while @buttonArg toggled \n @arg1","arguments":[{"name":"buttonArg","dataType":"none","socketType":"list","options":[{"label":"Ejecutar","value":"Ejecutar"}],"value":"Ejecutar"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":[],"color":"#99CC66","returnType":"command","position":{"x":520,"y":226}}, "connectedblocks":[{"socket": "1", "id": "33"}]}, {"id":"33", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "34"},{"socket": "1", "id": "35"}]}, {"id":"34", "spec":{"name":"comp-and","label":"@arg0 and @arg1","arguments":[{"name":"arg0","dataType":"boolean","socketType":"internal"},{"name":"arg1","dataType":"boolean","socketType":"internal"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "36"},{"socket": "1", "id": "37"}]}, {"id":"35", "spec":{"name":"agt-create-do","label":"create @arg0 @breed (s) \n do \n @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal","value":"1"},{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Peces"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "2", "id": "40"},{"socket": "after", "id": "41"}]}, {"id":"36", "spec":{"name":"comp-greater-than","label":"@arg0 > @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "38"}]}, {"id":"37", "spec":{"name":"comp-less-than","label":"@arg0 < @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal","value":"2"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "39"}]}, {"id":"38", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"100"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"39", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"100"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"40", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20fish"},{"name":"toValue","dataType":"string","socketType":"internal","value":"100"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "42"}]}, {"id":"41", "spec":{"name":"scatter","label":"scatter","arguments":[],"connections":["before","after"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "45"}]}, {"id":"42", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"shape"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "43"},{"socket": "after", "id": "44"}]}, {"id":"43", "spec":{"name":"shape-options","label":"built-in shape: @shapeList","arguments":[{"name":"shapeList","dataType":"none","socketType":"list","options":[{"label":"Cube","value":"Cube"},{"label":"Sphere","value":"Sphere"},{"label":"Pyramid","value":"Pyramid"},{"label":"Angelfish","value":"slnova_static_files/shapes/animals/angel-fish/angel-fish.obj"},{"label":"Bear","value":"slnova_static_files/shapes/animals/bear/bear.obj"},{"label":"Clownfish","value":"slnova_static_files/shapes/animals/clownfish/clownfish.obj"},{"label":"Clownfish%202","value":"slnova_static_files/shapes/animals/clownfish-hi-res/clownfish-hi-res.obj"},{"label":"Dog","value":"slnova_static_files/shapes/animals/dog/dog.obj"},{"label":"Dragon","value":"slnova_static_files/shapes/animals/dragon/dragon.obj"},{"label":"Elephant","value":"slnova_static_files/shapes/animals/elephant/elephant.obj"},{"label":"Giraffe","value":"slnova_static_files/shapes/animals/giraffe/giraffe.obj"},{"label":"Killer%20Whale","value":"slnova_static_files/shapes/animals/killer-whale/killer-whale.obj"},{"label":"Lion","value":"slnova_static_files/shapes/animals/lion/lion.obj"},{"label":"Lioness","value":"slnova_static_files/shapes/animals/lioness/lioness.obj"},{"label":"Manta%20Ray","value":"slnova_static_files/shapes/animals/mantaray/mantaray.obj"},{"label":"Otter%201","value":"slnova_static_files/shapes/animals/otter/otter-float.obj"},{"label":"Otter%202","value":"slnova_static_files/shapes/animals/otter/otter-stand.obj"},{"label":"Penguin","value":"slnova_static_files/shapes/animals/penguin/penguin.obj"},{"label":"Raccoon","value":"slnova_static_files/shapes/animals/raccoon/raccoon.obj"},{"label":"Sea%20Turtle","value":"slnova_static_files/shapes/animals/sea-turtle/sea-turtle.obj"},{"label":"Seagull","value":"slnova_static_files/shapes/animals/seagull/seagull.obj"},{"label":"Seahorse","value":"slnova_static_files/shapes/animals/seahorse/seahorse.obj"},{"label":"Shark","value":"slnova_static_files/shapes/animals/shark/shark.obj"},{"label":"Tuna","value":"slnova_static_files/shapes/animals/tuna/tuna.obj"},{"label":"Turtle","value":"slnova_static_files/shapes/animals/simpleturtle/simpleturtle.obj"},{"label":"Turtle%202","value":"slnova_static_files/shapes/animals/turtle2/turtle2.obj"},{"label":"Urchin","value":"slnova_static_files/shapes/animals/urchin/urchin.obj"},{"label":"Cone","value":"slnova_static_files/shapes/basic-shapes/cone/cone.obj"},{"label":"Cube","value":"slnova_static_files/shapes/basic-shapes/cube/cube.obj"},{"label":"Cylinder","value":"slnova_static_files/shapes/basic-shapes/cylinder/cylinder.obj"},{"label":"Diamond","value":"slnova_static_files/shapes/basic-shapes/diamond/diamond.obj"},{"label":"Pyramid","value":"slnova_static_files/shapes/basic-shapes/pyramid/pyramid.obj"},{"label":"Sphere","value":"slnova_static_files/shapes/basic-shapes/sphere/sphere.obj"},{"label":"Tetrahedron","value":"slnova_static_files/shapes/basic-shapes/tetrahedron/tetrahedron.obj"},{"label":"Torus","value":"slnova_static_files/shapes/basic-shapes/torus/torus.obj"},{"label":"Castle","value":"slnova_static_files/shapes/buildings/castle/castle.obj"},{"label":"Castle%202","value":"slnova_static_files/shapes/buildings/freecastle/freecastle.obj"},{"label":"Fortress","value":"slnova_static_files/shapes/buildings/fortress/fortress_textured_sketchup.obj"},{"label":"Hospital","value":"slnova_static_files/shapes/buildings/hospital/hospital.obj"},{"label":"House","value":"slnova_static_files/shapes/buildings/house/house.obj"},{"label":"Flower","value":"slnova_static_files/shapes/landscape/flower/flower.obj"},{"label":"Grass","value":"slnova_static_files/shapes/landscape/grass/grass.obj"},{"label":"Kelp","value":"slnova_static_files/shapes/landscape/kelp/kelp.obj"},{"label":"Kelp%202","value":"slnova_static_files/shapes/landscape/kelp/kelp2.obj"},{"label":"Rock","value":"slnova_static_files/shapes/landscape/rock/rock.obj"},{"label":"Rock%202","value":"slnova_static_files/shapes/landscape/rock/rock2.obj"},{"label":"Tree","value":"slnova_static_files/shapes/landscape/tree/tree.obj"},{"label":"A","value":"slnova_static_files/shapes/letters/a/a.obj"},{"label":"B","value":"slnova_static_files/shapes/letters/b/b.obj"},{"label":"C","value":"slnova_static_files/shapes/letters/c/c.obj"},{"label":"D","value":"slnova_static_files/shapes/letters/d/d.obj"},{"label":"E","value":"slnova_static_files/shapes/letters/e/e.obj"},{"label":"F","value":"slnova_static_files/shapes/letters/f/f.obj"},{"label":"G","value":"slnova_static_files/shapes/letters/g/g.obj"},{"label":"H","value":"slnova_static_files/shapes/letters/h/h.obj"},{"label":"I","value":"slnova_static_files/shapes/letters/i/i.obj"},{"label":"J","value":"slnova_static_files/shapes/letters/j/j.obj"},{"label":"K","value":"slnova_static_files/shapes/letters/k/k.obj"},{"label":"L","value":"slnova_static_files/shapes/letters/l/l.obj"},{"label":"M","value":"slnova_static_files/shapes/letters/m/m.obj"},{"label":"N","value":"slnova_static_files/shapes/letters/n/n.obj"},{"label":"O","value":"slnova_static_files/shapes/letters/o/o.obj"},{"label":"P","value":"slnova_static_files/shapes/letters/p/p.obj"},{"label":"Q","value":"slnova_static_files/shapes/letters/q/q.obj"},{"label":"R","value":"slnova_static_files/shapes/letters/r/r.obj"},{"label":"S","value":"slnova_static_files/shapes/letters/s/s.obj"},{"label":"T","value":"slnova_static_files/shapes/letters/t/t.obj"},{"label":"U","value":"slnova_static_files/shapes/letters/u/u.obj"},{"label":"V","value":"slnova_static_files/shapes/letters/v/v.obj"},{"label":"W","value":"slnova_static_files/shapes/letters/w/w.obj"},{"label":"X","value":"slnova_static_files/shapes/letters/x/x.obj"},{"label":"Y","value":"slnova_static_files/shapes/letters/y/y.obj"},{"label":"Z","value":"slnova_static_files/shapes/letters/z/z.obj"},{"label":"0","value":"slnova_static_files/shapes/numbers/0/0.obj"},{"label":"1","value":"slnova_static_files/shapes/numbers/1/1.obj"},{"label":"2","value":"slnova_static_files/shapes/numbers/2/2.obj"},{"label":"3","value":"slnova_static_files/shapes/numbers/3/3.obj"},{"label":"4","value":"slnova_static_files/shapes/numbers/4/4.obj"},{"label":"5","value":"slnova_static_files/shapes/numbers/5/5.obj"},{"label":"6","value":"slnova_static_files/shapes/numbers/6/6.obj"},{"label":"7","value":"slnova_static_files/shapes/numbers/7/7.obj"},{"label":"8","value":"slnova_static_files/shapes/numbers/8/8.obj"},{"label":"9","value":"slnova_static_files/shapes/numbers/9/9.obj"},{"label":"Carrot","value":"slnova_static_files/shapes/objects/carrot/carrot.obj"},{"label":"Coin","value":"slnova_static_files/shapes/objects/coin/coin-silver.obj"},{"label":"Coin%202","value":"slnova_static_files/shapes/objects/coin/coin2.obj"},{"label":"Earth","value":"slnova_static_files/shapes/objects/earth/earth.obj"},{"label":"Earth%202","value":"slnova_static_files/shapes/objects/earthclouds/earthclouds.obj"},{"label":"Enzyme","value":"slnova_static_files/shapes/objects/enzyme/enzyme.obj"},{"label":"Fireball","value":"slnova_static_files/shapes/objects/fireball/fireball.obj"},{"label":"Fireball%202","value":"slnova_static_files/shapes/objects/fireball2/fireball.obj"},{"label":"Fireball%203","value":"slnova_static_files/shapes/objects/fireball2/fireball2.obj"},{"label":"Gem","value":"slnova_static_files/shapes/objects/gem/gem.obj"},{"label":"Hydrant","value":"slnova_static_files/shapes/objects/hydrant/hydrant.obj"},{"label":"Moon","value":"slnova_static_files/shapes/objects/moon/moon.obj"},{"label":"Phospholipid","value":"slnova_static_files/shapes/objects/phospholipid/phospholipid.obj"},{"label":"Star","value":"slnova_static_files/shapes/objects/star/star.obj"},{"label":"Starch%20Molecule","value":"slnova_static_files/shapes/objects/starch-molecule/starch-molecule.obj"},{"label":"Water%20Molecule","value":"slnova_static_files/shapes/objects/water-molecule/water-molecule.obj"},{"label":"Fireman","value":"slnova_static_files/shapes/people/fireman/fireman.obj"},{"label":"Boat","value":"slnova_static_files/shapes/vehicles/boat/boat.obj"},{"label":"Helicopter","value":"slnova_static_files/shapes/vehicles/helicopter/helicopter.obj"},{"label":"Lambo","value":"slnova_static_files/shapes/vehicles/lambo/lambo.obj"},{"label":"Plane","value":"slnova_static_files/shapes/vehicles/plane/plane.obj"},{"label":"Spaceship%201","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship1.obj"},{"label":"Spaceship%202","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship2.obj"},{"label":"Train","value":"slnova_static_files/shapes/vehicles/train/train.obj"},{"label":"Truck","value":"slnova_static_files/shapes/vehicles/truck/truck.obj"},{"label":"Wooden%20Train","value":"slnova_static_files/shapes/vehicles/train_wood/train_wood.obj"}],"value":"slnova_static_files/shapes/animals/clownfish/clownfish.obj"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"44", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"size"},{"name":"toValue","dataType":"string","socketType":"internal","value":"5"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[]}, {"id":"45", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20fish"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "46"}]}, {"id":"46", "spec":{"name":"calc-quotient","label":"@arg1 / @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal","value":"2"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "47"}]}, {"id":"47", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20fish"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}]}, {"name":"Algas", "defaultShape":"box", "customTraits":[{"defaultValue":"","traitType":"data","name":"Strength%20of%20algae"}], "blocks":[{"id":"1", "spec":{"name":"wgt-button-toggle","label":"while @buttonArg toggled \n @arg1","arguments":[{"name":"buttonArg","dataType":"none","socketType":"list","options":[{"label":"Ejecutar","value":"Ejecutar"}],"value":"Ejecutar"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":[],"color":"#99CC66","returnType":"command","position":{"x":30,"y":31}}, "connectedblocks":[{"socket": "1", "id": "2"}]}, {"id":"2", "spec":{"name":"move-left","label":"left by @degs degs","arguments":[{"name":"degs","dataType":"string","socketType":"internal"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "3"},{"socket": "after", "id": "4"}]}, {"id":"3", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"2"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"4", "spec":{"name":"move-right","label":"right by @degs degs","arguments":[{"name":"degs","dataType":"string","socketType":"internal"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "5"},{"socket": "after", "id": "6"}]}, {"id":"5", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"2"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"6", "spec":{"name":"move-forward","label":"forward @steps","arguments":[{"name":"steps","dataType":"string","socketType":"internal","value":"0.1"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "7"}]}, {"id":"7", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "8"},{"socket": "1", "id": "9"},{"socket": "after", "id": "10"}]}, {"id":"8", "spec":{"name":"comp-less-than","label":"@arg0 < @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "11"},{"socket": "1", "id": "12"}]}, {"id":"9", "spec":{"name":"agt-create-do","label":"create @arg0 @breed (s) \n do \n @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "13"},{"socket": "2", "id": "14"},{"socket": "after", "id": "15"}]}, {"id":"10", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20algae"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "25"},{"socket": "after", "id": "26"}]}, {"id":"11", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"1000"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"12", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"}],"value":"Tasa de reproducción de algas"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"13", "spec":{"name":"calc-sum","label":"@arg1 + @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal","value":"1"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "16"}]}, {"id":"14", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"shape"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "17"},{"socket": "after", "id": "18"}]}, {"id":"15", "spec":{"name":"scatter","label":"scatter","arguments":[],"connections":["before","after"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "22"}]}, {"id":"16", "spec":{"name":"constant-random","label":"random @arg","arguments":[{"name":"arg","dataType":"string","socketType":"internal","value":"3"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[]}, {"id":"17", "spec":{"name":"shape-options","label":"built-in shape: @shapeList","arguments":[{"name":"shapeList","dataType":"none","socketType":"list","options":[{"label":"Cube","value":"Cube"},{"label":"Sphere","value":"Sphere"},{"label":"Pyramid","value":"Pyramid"},{"label":"Angelfish","value":"slnova_static_files/shapes/animals/angel-fish/angel-fish.obj"},{"label":"Bear","value":"slnova_static_files/shapes/animals/bear/bear.obj"},{"label":"Clownfish","value":"slnova_static_files/shapes/animals/clownfish/clownfish.obj"},{"label":"Clownfish%202","value":"slnova_static_files/shapes/animals/clownfish-hi-res/clownfish-hi-res.obj"},{"label":"Dog","value":"slnova_static_files/shapes/animals/dog/dog.obj"},{"label":"Dragon","value":"slnova_static_files/shapes/animals/dragon/dragon.obj"},{"label":"Elephant","value":"slnova_static_files/shapes/animals/elephant/elephant.obj"},{"label":"Giraffe","value":"slnova_static_files/shapes/animals/giraffe/giraffe.obj"},{"label":"Killer%20Whale","value":"slnova_static_files/shapes/animals/killer-whale/killer-whale.obj"},{"label":"Lion","value":"slnova_static_files/shapes/animals/lion/lion.obj"},{"label":"Lioness","value":"slnova_static_files/shapes/animals/lioness/lioness.obj"},{"label":"Manta%20Ray","value":"slnova_static_files/shapes/animals/mantaray/mantaray.obj"},{"label":"Otter%201","value":"slnova_static_files/shapes/animals/otter/otter-float.obj"},{"label":"Otter%202","value":"slnova_static_files/shapes/animals/otter/otter-stand.obj"},{"label":"Penguin","value":"slnova_static_files/shapes/animals/penguin/penguin.obj"},{"label":"Raccoon","value":"slnova_static_files/shapes/animals/raccoon/raccoon.obj"},{"label":"Sea%20Turtle","value":"slnova_static_files/shapes/animals/sea-turtle/sea-turtle.obj"},{"label":"Seagull","value":"slnova_static_files/shapes/animals/seagull/seagull.obj"},{"label":"Seahorse","value":"slnova_static_files/shapes/animals/seahorse/seahorse.obj"},{"label":"Shark","value":"slnova_static_files/shapes/animals/shark/shark.obj"},{"label":"Tuna","value":"slnova_static_files/shapes/animals/tuna/tuna.obj"},{"label":"Turtle","value":"slnova_static_files/shapes/animals/simpleturtle/simpleturtle.obj"},{"label":"Turtle%202","value":"slnova_static_files/shapes/animals/turtle2/turtle2.obj"},{"label":"Urchin","value":"slnova_static_files/shapes/animals/urchin/urchin.obj"},{"label":"Cone","value":"slnova_static_files/shapes/basic-shapes/cone/cone.obj"},{"label":"Cube","value":"slnova_static_files/shapes/basic-shapes/cube/cube.obj"},{"label":"Cylinder","value":"slnova_static_files/shapes/basic-shapes/cylinder/cylinder.obj"},{"label":"Diamond","value":"slnova_static_files/shapes/basic-shapes/diamond/diamond.obj"},{"label":"Pyramid","value":"slnova_static_files/shapes/basic-shapes/pyramid/pyramid.obj"},{"label":"Sphere","value":"slnova_static_files/shapes/basic-shapes/sphere/sphere.obj"},{"label":"Tetrahedron","value":"slnova_static_files/shapes/basic-shapes/tetrahedron/tetrahedron.obj"},{"label":"Torus","value":"slnova_static_files/shapes/basic-shapes/torus/torus.obj"},{"label":"Castle","value":"slnova_static_files/shapes/buildings/castle/castle.obj"},{"label":"Castle%202","value":"slnova_static_files/shapes/buildings/freecastle/freecastle.obj"},{"label":"Fortress","value":"slnova_static_files/shapes/buildings/fortress/fortress_textured_sketchup.obj"},{"label":"Hospital","value":"slnova_static_files/shapes/buildings/hospital/hospital.obj"},{"label":"House","value":"slnova_static_files/shapes/buildings/house/house.obj"},{"label":"Flower","value":"slnova_static_files/shapes/landscape/flower/flower.obj"},{"label":"Grass","value":"slnova_static_files/shapes/landscape/grass/grass.obj"},{"label":"Kelp","value":"slnova_static_files/shapes/landscape/kelp/kelp.obj"},{"label":"Kelp%202","value":"slnova_static_files/shapes/landscape/kelp/kelp2.obj"},{"label":"Rock","value":"slnova_static_files/shapes/landscape/rock/rock.obj"},{"label":"Rock%202","value":"slnova_static_files/shapes/landscape/rock/rock2.obj"},{"label":"Tree","value":"slnova_static_files/shapes/landscape/tree/tree.obj"},{"label":"A","value":"slnova_static_files/shapes/letters/a/a.obj"},{"label":"B","value":"slnova_static_files/shapes/letters/b/b.obj"},{"label":"C","value":"slnova_static_files/shapes/letters/c/c.obj"},{"label":"D","value":"slnova_static_files/shapes/letters/d/d.obj"},{"label":"E","value":"slnova_static_files/shapes/letters/e/e.obj"},{"label":"F","value":"slnova_static_files/shapes/letters/f/f.obj"},{"label":"G","value":"slnova_static_files/shapes/letters/g/g.obj"},{"label":"H","value":"slnova_static_files/shapes/letters/h/h.obj"},{"label":"I","value":"slnova_static_files/shapes/letters/i/i.obj"},{"label":"J","value":"slnova_static_files/shapes/letters/j/j.obj"},{"label":"K","value":"slnova_static_files/shapes/letters/k/k.obj"},{"label":"L","value":"slnova_static_files/shapes/letters/l/l.obj"},{"label":"M","value":"slnova_static_files/shapes/letters/m/m.obj"},{"label":"N","value":"slnova_static_files/shapes/letters/n/n.obj"},{"label":"O","value":"slnova_static_files/shapes/letters/o/o.obj"},{"label":"P","value":"slnova_static_files/shapes/letters/p/p.obj"},{"label":"Q","value":"slnova_static_files/shapes/letters/q/q.obj"},{"label":"R","value":"slnova_static_files/shapes/letters/r/r.obj"},{"label":"S","value":"slnova_static_files/shapes/letters/s/s.obj"},{"label":"T","value":"slnova_static_files/shapes/letters/t/t.obj"},{"label":"U","value":"slnova_static_files/shapes/letters/u/u.obj"},{"label":"V","value":"slnova_static_files/shapes/letters/v/v.obj"},{"label":"W","value":"slnova_static_files/shapes/letters/w/w.obj"},{"label":"X","value":"slnova_static_files/shapes/letters/x/x.obj"},{"label":"Y","value":"slnova_static_files/shapes/letters/y/y.obj"},{"label":"Z","value":"slnova_static_files/shapes/letters/z/z.obj"},{"label":"0","value":"slnova_static_files/shapes/numbers/0/0.obj"},{"label":"1","value":"slnova_static_files/shapes/numbers/1/1.obj"},{"label":"2","value":"slnova_static_files/shapes/numbers/2/2.obj"},{"label":"3","value":"slnova_static_files/shapes/numbers/3/3.obj"},{"label":"4","value":"slnova_static_files/shapes/numbers/4/4.obj"},{"label":"5","value":"slnova_static_files/shapes/numbers/5/5.obj"},{"label":"6","value":"slnova_static_files/shapes/numbers/6/6.obj"},{"label":"7","value":"slnova_static_files/shapes/numbers/7/7.obj"},{"label":"8","value":"slnova_static_files/shapes/numbers/8/8.obj"},{"label":"9","value":"slnova_static_files/shapes/numbers/9/9.obj"},{"label":"Carrot","value":"slnova_static_files/shapes/objects/carrot/carrot.obj"},{"label":"Coin","value":"slnova_static_files/shapes/objects/coin/coin-silver.obj"},{"label":"Coin%202","value":"slnova_static_files/shapes/objects/coin/coin2.obj"},{"label":"Earth","value":"slnova_static_files/shapes/objects/earth/earth.obj"},{"label":"Earth%202","value":"slnova_static_files/shapes/objects/earthclouds/earthclouds.obj"},{"label":"Enzyme","value":"slnova_static_files/shapes/objects/enzyme/enzyme.obj"},{"label":"Fireball","value":"slnova_static_files/shapes/objects/fireball/fireball.obj"},{"label":"Fireball%202","value":"slnova_static_files/shapes/objects/fireball2/fireball.obj"},{"label":"Fireball%203","value":"slnova_static_files/shapes/objects/fireball2/fireball2.obj"},{"label":"Gem","value":"slnova_static_files/shapes/objects/gem/gem.obj"},{"label":"Hydrant","value":"slnova_static_files/shapes/objects/hydrant/hydrant.obj"},{"label":"Moon","value":"slnova_static_files/shapes/objects/moon/moon.obj"},{"label":"Phospholipid","value":"slnova_static_files/shapes/objects/phospholipid/phospholipid.obj"},{"label":"Star","value":"slnova_static_files/shapes/objects/star/star.obj"},{"label":"Starch%20Molecule","value":"slnova_static_files/shapes/objects/starch-molecule/starch-molecule.obj"},{"label":"Water%20Molecule","value":"slnova_static_files/shapes/objects/water-molecule/water-molecule.obj"},{"label":"Fireman","value":"slnova_static_files/shapes/people/fireman/fireman.obj"},{"label":"Boat","value":"slnova_static_files/shapes/vehicles/boat/boat.obj"},{"label":"Helicopter","value":"slnova_static_files/shapes/vehicles/helicopter/helicopter.obj"},{"label":"Lambo","value":"slnova_static_files/shapes/vehicles/lambo/lambo.obj"},{"label":"Plane","value":"slnova_static_files/shapes/vehicles/plane/plane.obj"},{"label":"Spaceship%201","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship1.obj"},{"label":"Spaceship%202","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship2.obj"},{"label":"Train","value":"slnova_static_files/shapes/vehicles/train/train.obj"},{"label":"Truck","value":"slnova_static_files/shapes/vehicles/truck/truck.obj"},{"label":"Wooden%20Train","value":"slnova_static_files/shapes/vehicles/train_wood/train_wood.obj"}],"value":"Pyramid"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"18", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"color"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "19"},{"socket": "after", "id": "20"}]}, {"id":"19", "spec":{"name":"color-options","label":"color: @colorList","arguments":[{"name":"colorList","dataType":"none","socketType":"list","options":[{"label":"random%20color","value":"random_color"},{"label":"black","value":"0x000000"},{"label":"blue","value":"0x0000FF"},{"label":"brown","value":"0xA07050"},{"label":"cyan","value":"0x00FFFF"},{"label":"gray","value":"0x8E8E8E"},{"label":"green","value":"0x51C500"},{"label":"lime","value":"0x00FF00"},{"label":"magenta","value":"0xFF00FF"},{"label":"orange","value":"0xFF5500"},{"label":"pink","value":"0xFF007F"},{"label":"purple","value":"0x7F00FF"},{"label":"red","value":"0xFF0000"},{"label":"sky%20blue","value":"0x007FFF"},{"label":"turquoise","value":"0x00FFC6"},{"label":"white","value":"0xFFFFFF"},{"label":"yellow","value":"0xFFFF00"},{"label":"lime%20green","value":"0x80FF00"}],"value":"0x51C500"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"20", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20algae"},{"name":"toValue","dataType":"string","socketType":"internal","value":"100"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "21"}]}, {"id":"21", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"size"},{"name":"toValue","dataType":"string","socketType":"internal","value":"1"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[]}, {"id":"22", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20algae"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "23"}]}, {"id":"23", "spec":{"name":"calc-quotient","label":"@arg1 / @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal","value":"2"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "24"}]}, {"id":"24", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20algae"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"25", "spec":{"name":"calc-difference","label":"@arg1 - @arg2","arguments":[{"name":"arg1","dataType":"string","socketType":"internal"},{"name":"arg2","dataType":"string","socketType":"internal","value":"1"}],"connections":[],"color":"#6699CC","returnType":"string"}, "connectedblocks":[{"socket": "0", "id": "27"}]}, {"id":"26", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "28"},{"socket": "1", "id": "29"},{"socket": "after", "id": "30"}]}, {"id":"27", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20algae"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"28", "spec":{"name":"comp-greater-than","label":"@arg0 > @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal","value":"10"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "31"}]}, {"id":"29", "spec":{"name":"agt-delete","label":"delete","arguments":[],"connections":["before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[]}, {"id":"30", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "32"},{"socket": "1", "id": "33"}]}, {"id":"31", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"10"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"32", "spec":{"name":"comp-equals","label":"@arg0 = @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal","value":"0"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "34"}]}, {"id":"33", "spec":{"name":"agt-delete","label":"delete","arguments":[],"connections":["before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[]}, {"id":"34", "spec":{"name":"trait-get","label":"my @getArg","arguments":[{"name":"getArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"},{"label":"breed","value":"breed"},{"label":"id","value":"id"}],"value":"Strength%20of%20algae"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}]}, {"name":"Ocean", "defaultShape":"box", "customTraits":[], "blocks":[]}, {"name":"Everyone", "defaultShape":"box", "customTraits":[], "blocks":[]}, {"name":"The%20World", "defaultShape":"box", "customTraits":[], "blocks":[{"id":"1", "spec":{"name":"wgt-button-push","label":"when @buttonArg pushed \n @arg1","arguments":[{"name":"buttonArg","dataType":"none","socketType":"list","options":[{"label":"setear","value":"setear"}],"value":"setear"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":[],"color":"#99CC66","returnType":"command","position":{"x":10,"y":11}}, "connectedblocks":[{"socket": "1", "id": "2"}]}, {"id":"2", "spec":{"name":"wgt-line-graph-clear","label":"clear line graph @argList","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Población de peces y algas","value":"Población de peces y algas"}],"value":"Población de peces y algas"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "3"}]}, {"id":"3", "spec":{"name":"terrain-clear","label":"clear terrain","arguments":[],"connections":["before","after"],"color":"#669933","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "4"}]}, {"id":"4", "spec":{"name":"agt-delete-everyone","label":"delete everyone","arguments":[],"connections":["before","after"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "5"}]}, {"id":"5", "spec":{"name":"agt-create-do","label":"create @arg0 @breed (s) \n do \n @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal","value":"1"},{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Ocean"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "2", "id": "6"},{"socket": "after", "id": "7"}]}, {"id":"6", "spec":{"name":"yield","label":"yield","arguments":[],"connections":["before","after"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "8"}]}, {"id":"7", "spec":{"name":"agt-create-do","label":"create @arg0 @breed (s) \n do \n @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Peces"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "15"},{"socket": "2", "id": "16"},{"socket": "after", "id": "17"}]}, {"id":"8", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"shape"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "9"},{"socket": "after", "id": "10"}]}, {"id":"9", "spec":{"name":"shape-options","label":"built-in shape: @shapeList","arguments":[{"name":"shapeList","dataType":"none","socketType":"list","options":[{"label":"Pyramid","value":"Pyramid"},{"label":"Sphere","value":"Sphere"},{"label":"Cube","value":"Cube"},{"label":"Angelfish","value":"slnova_static_files/shapes/animals/angel-fish/angel-fish.obj"},{"label":"Bear","value":"slnova_static_files/shapes/animals/bear/bear.obj"},{"label":"Clownfish","value":"slnova_static_files/shapes/animals/clownfish/clownfish.obj"},{"label":"Clownfish%202","value":"slnova_static_files/shapes/animals/clownfish-hi-res/clownfish-hi-res.obj"},{"label":"Dog","value":"slnova_static_files/shapes/animals/dog/dog.obj"},{"label":"Dragon","value":"slnova_static_files/shapes/animals/dragon/dragon.obj"},{"label":"Elephant","value":"slnova_static_files/shapes/animals/elephant/elephant.obj"},{"label":"Giraffe","value":"slnova_static_files/shapes/animals/giraffe/giraffe.obj"},{"label":"Killer%20Whale","value":"slnova_static_files/shapes/animals/killer-whale/killer-whale.obj"},{"label":"Lion","value":"slnova_static_files/shapes/animals/lion/lion.obj"},{"label":"Lioness","value":"slnova_static_files/shapes/animals/lioness/lioness.obj"},{"label":"Manta%20Ray","value":"slnova_static_files/shapes/animals/mantaray/mantaray.obj"},{"label":"Otter%201","value":"slnova_static_files/shapes/animals/otter/otter-float.obj"},{"label":"Otter%202","value":"slnova_static_files/shapes/animals/otter/otter-stand.obj"},{"label":"Penguin","value":"slnova_static_files/shapes/animals/penguin/penguin.obj"},{"label":"Raccoon","value":"slnova_static_files/shapes/animals/raccoon/raccoon.obj"},{"label":"Sea%20Turtle","value":"slnova_static_files/shapes/animals/sea-turtle/sea-turtle.obj"},{"label":"Seagull","value":"slnova_static_files/shapes/animals/seagull/seagull.obj"},{"label":"Seahorse","value":"slnova_static_files/shapes/animals/seahorse/seahorse.obj"},{"label":"Shark","value":"slnova_static_files/shapes/animals/shark/shark.obj"},{"label":"Tuna","value":"slnova_static_files/shapes/animals/tuna/tuna.obj"},{"label":"Turtle","value":"slnova_static_files/shapes/animals/simpleturtle/simpleturtle.obj"},{"label":"Turtle%202","value":"slnova_static_files/shapes/animals/turtle2/turtle2.obj"},{"label":"Urchin","value":"slnova_static_files/shapes/animals/urchin/urchin.obj"},{"label":"Cone","value":"slnova_static_files/shapes/basic-shapes/cone/cone.obj"},{"label":"Cube","value":"slnova_static_files/shapes/basic-shapes/cube/cube.obj"},{"label":"Cylinder","value":"slnova_static_files/shapes/basic-shapes/cylinder/cylinder.obj"},{"label":"Diamond","value":"slnova_static_files/shapes/basic-shapes/diamond/diamond.obj"},{"label":"Pyramid","value":"slnova_static_files/shapes/basic-shapes/pyramid/pyramid.obj"},{"label":"Sphere","value":"slnova_static_files/shapes/basic-shapes/sphere/sphere.obj"},{"label":"Tetrahedron","value":"slnova_static_files/shapes/basic-shapes/tetrahedron/tetrahedron.obj"},{"label":"Torus","value":"slnova_static_files/shapes/basic-shapes/torus/torus.obj"},{"label":"Castle","value":"slnova_static_files/shapes/buildings/castle/castle.obj"},{"label":"Castle%202","value":"slnova_static_files/shapes/buildings/freecastle/freecastle.obj"},{"label":"Fortress","value":"slnova_static_files/shapes/buildings/fortress/fortress_textured_sketchup.obj"},{"label":"Hospital","value":"slnova_static_files/shapes/buildings/hospital/hospital.obj"},{"label":"House","value":"slnova_static_files/shapes/buildings/house/house.obj"},{"label":"Flower","value":"slnova_static_files/shapes/landscape/flower/flower.obj"},{"label":"Grass","value":"slnova_static_files/shapes/landscape/grass/grass.obj"},{"label":"Kelp","value":"slnova_static_files/shapes/landscape/kelp/kelp.obj"},{"label":"Kelp%202","value":"slnova_static_files/shapes/landscape/kelp/kelp2.obj"},{"label":"Rock","value":"slnova_static_files/shapes/landscape/rock/rock.obj"},{"label":"Rock%202","value":"slnova_static_files/shapes/landscape/rock/rock2.obj"},{"label":"Tree","value":"slnova_static_files/shapes/landscape/tree/tree.obj"},{"label":"A","value":"slnova_static_files/shapes/letters/a/a.obj"},{"label":"B","value":"slnova_static_files/shapes/letters/b/b.obj"},{"label":"C","value":"slnova_static_files/shapes/letters/c/c.obj"},{"label":"D","value":"slnova_static_files/shapes/letters/d/d.obj"},{"label":"E","value":"slnova_static_files/shapes/letters/e/e.obj"},{"label":"F","value":"slnova_static_files/shapes/letters/f/f.obj"},{"label":"G","value":"slnova_static_files/shapes/letters/g/g.obj"},{"label":"H","value":"slnova_static_files/shapes/letters/h/h.obj"},{"label":"I","value":"slnova_static_files/shapes/letters/i/i.obj"},{"label":"J","value":"slnova_static_files/shapes/letters/j/j.obj"},{"label":"K","value":"slnova_static_files/shapes/letters/k/k.obj"},{"label":"L","value":"slnova_static_files/shapes/letters/l/l.obj"},{"label":"M","value":"slnova_static_files/shapes/letters/m/m.obj"},{"label":"N","value":"slnova_static_files/shapes/letters/n/n.obj"},{"label":"O","value":"slnova_static_files/shapes/letters/o/o.obj"},{"label":"P","value":"slnova_static_files/shapes/letters/p/p.obj"},{"label":"Q","value":"slnova_static_files/shapes/letters/q/q.obj"},{"label":"R","value":"slnova_static_files/shapes/letters/r/r.obj"},{"label":"S","value":"slnova_static_files/shapes/letters/s/s.obj"},{"label":"T","value":"slnova_static_files/shapes/letters/t/t.obj"},{"label":"U","value":"slnova_static_files/shapes/letters/u/u.obj"},{"label":"V","value":"slnova_static_files/shapes/letters/v/v.obj"},{"label":"W","value":"slnova_static_files/shapes/letters/w/w.obj"},{"label":"X","value":"slnova_static_files/shapes/letters/x/x.obj"},{"label":"Y","value":"slnova_static_files/shapes/letters/y/y.obj"},{"label":"Z","value":"slnova_static_files/shapes/letters/z/z.obj"},{"label":"0","value":"slnova_static_files/shapes/numbers/0/0.obj"},{"label":"1","value":"slnova_static_files/shapes/numbers/1/1.obj"},{"label":"2","value":"slnova_static_files/shapes/numbers/2/2.obj"},{"label":"3","value":"slnova_static_files/shapes/numbers/3/3.obj"},{"label":"4","value":"slnova_static_files/shapes/numbers/4/4.obj"},{"label":"5","value":"slnova_static_files/shapes/numbers/5/5.obj"},{"label":"6","value":"slnova_static_files/shapes/numbers/6/6.obj"},{"label":"7","value":"slnova_static_files/shapes/numbers/7/7.obj"},{"label":"8","value":"slnova_static_files/shapes/numbers/8/8.obj"},{"label":"9","value":"slnova_static_files/shapes/numbers/9/9.obj"},{"label":"Carrot","value":"slnova_static_files/shapes/objects/carrot/carrot.obj"},{"label":"Coin","value":"slnova_static_files/shapes/objects/coin/coin-silver.obj"},{"label":"Coin%202","value":"slnova_static_files/shapes/objects/coin/coin2.obj"},{"label":"Earth","value":"slnova_static_files/shapes/objects/earth/earth.obj"},{"label":"Earth%202","value":"slnova_static_files/shapes/objects/earthclouds/earthclouds.obj"},{"label":"Enzyme","value":"slnova_static_files/shapes/objects/enzyme/enzyme.obj"},{"label":"Fireball","value":"slnova_static_files/shapes/objects/fireball/fireball.obj"},{"label":"Fireball%202","value":"slnova_static_files/shapes/objects/fireball2/fireball.obj"},{"label":"Fireball%203","value":"slnova_static_files/shapes/objects/fireball2/fireball2.obj"},{"label":"Gem","value":"slnova_static_files/shapes/objects/gem/gem.obj"},{"label":"Hydrant","value":"slnova_static_files/shapes/objects/hydrant/hydrant.obj"},{"label":"Moon","value":"slnova_static_files/shapes/objects/moon/moon.obj"},{"label":"Phospholipid","value":"slnova_static_files/shapes/objects/phospholipid/phospholipid.obj"},{"label":"Star","value":"slnova_static_files/shapes/objects/star/star.obj"},{"label":"Starch%20Molecule","value":"slnova_static_files/shapes/objects/starch-molecule/starch-molecule.obj"},{"label":"Water%20Molecule","value":"slnova_static_files/shapes/objects/water-molecule/water-molecule.obj"},{"label":"Fireman","value":"slnova_static_files/shapes/people/fireman/fireman.obj"},{"label":"Boat","value":"slnova_static_files/shapes/vehicles/boat/boat.obj"},{"label":"Helicopter","value":"slnova_static_files/shapes/vehicles/helicopter/helicopter.obj"},{"label":"Lambo","value":"slnova_static_files/shapes/vehicles/lambo/lambo.obj"},{"label":"Plane","value":"slnova_static_files/shapes/vehicles/plane/plane.obj"},{"label":"Spaceship%201","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship1.obj"},{"label":"Spaceship%202","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship2.obj"},{"label":"Train","value":"slnova_static_files/shapes/vehicles/train/train.obj"},{"label":"Truck","value":"slnova_static_files/shapes/vehicles/truck/truck.obj"},{"label":"Wooden%20Train","value":"slnova_static_files/shapes/vehicles/train_wood/train_wood.obj"}],"value":"Cube"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"10", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"size"},{"name":"toValue","dataType":"string","socketType":"internal","value":"200"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "11"}]}, {"id":"11", "spec":{"name":"move-teleport","label":"teleport to \n x: @newX \n y: @newY \n z: @newZ","arguments":[{"name":"newX","dataType":"string","socketType":"internal","value":"0"},{"name":"newY","dataType":"string","socketType":"internal","value":"0"},{"name":"newZ","dataType":"string","socketType":"internal","value":"0"}],"connections":["after","before"],"color":"#A60000","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "12"}]}, {"id":"12", "spec":{"name":"stamp","label":"stamp @numArg","arguments":[{"name":"numArg","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#669933","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "13"},{"socket": "after", "id": "14"}]}, {"id":"13", "spec":{"name":"color-options","label":"color: @colorList","arguments":[{"name":"colorList","dataType":"none","socketType":"list","options":[{"label":"random%20color","value":"random_color"},{"label":"black","value":"0x000000"},{"label":"blue","value":"0x0000FF"},{"label":"brown","value":"0xA07050"},{"label":"cyan","value":"0x00FFFF"},{"label":"gray","value":"0x8E8E8E"},{"label":"green","value":"0x51C500"},{"label":"lime","value":"0x00FF00"},{"label":"magenta","value":"0xFF00FF"},{"label":"orange","value":"0xFF5500"},{"label":"pink","value":"0xFF007F"},{"label":"purple","value":"0x7F00FF"},{"label":"red","value":"0xFF0000"},{"label":"sky%20blue","value":"0x007FFF"},{"label":"turquoise","value":"0x00FFC6"},{"label":"white","value":"0xFFFFFF"},{"label":"yellow","value":"0xFFFF00"},{"label":"lime%20green","value":"0x80FF00"}],"value":"0x0000FF"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"14", "spec":{"name":"agt-delete","label":"delete","arguments":[],"connections":["before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[]}, {"id":"15", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"}],"value":"Cantidad inicial de peces"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"16", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"shape"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "18"},{"socket": "after", "id": "19"}]}, {"id":"17", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"Peces"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "21"},{"socket": "after", "id": "22"}]}, {"id":"18", "spec":{"name":"shape-options","label":"built-in shape: @shapeList","arguments":[{"name":"shapeList","dataType":"none","socketType":"list","options":[{"label":"Cube","value":"Cube"},{"label":"Sphere","value":"Sphere"},{"label":"Pyramid","value":"Pyramid"},{"label":"Angelfish","value":"slnova_static_files/shapes/animals/angel-fish/angel-fish.obj"},{"label":"Bear","value":"slnova_static_files/shapes/animals/bear/bear.obj"},{"label":"Clownfish","value":"slnova_static_files/shapes/animals/clownfish/clownfish.obj"},{"label":"Clownfish%202","value":"slnova_static_files/shapes/animals/clownfish-hi-res/clownfish-hi-res.obj"},{"label":"Dog","value":"slnova_static_files/shapes/animals/dog/dog.obj"},{"label":"Dragon","value":"slnova_static_files/shapes/animals/dragon/dragon.obj"},{"label":"Elephant","value":"slnova_static_files/shapes/animals/elephant/elephant.obj"},{"label":"Giraffe","value":"slnova_static_files/shapes/animals/giraffe/giraffe.obj"},{"label":"Killer%20Whale","value":"slnova_static_files/shapes/animals/killer-whale/killer-whale.obj"},{"label":"Lion","value":"slnova_static_files/shapes/animals/lion/lion.obj"},{"label":"Lioness","value":"slnova_static_files/shapes/animals/lioness/lioness.obj"},{"label":"Manta%20Ray","value":"slnova_static_files/shapes/animals/mantaray/mantaray.obj"},{"label":"Otter%201","value":"slnova_static_files/shapes/animals/otter/otter-float.obj"},{"label":"Otter%202","value":"slnova_static_files/shapes/animals/otter/otter-stand.obj"},{"label":"Penguin","value":"slnova_static_files/shapes/animals/penguin/penguin.obj"},{"label":"Raccoon","value":"slnova_static_files/shapes/animals/raccoon/raccoon.obj"},{"label":"Sea%20Turtle","value":"slnova_static_files/shapes/animals/sea-turtle/sea-turtle.obj"},{"label":"Seagull","value":"slnova_static_files/shapes/animals/seagull/seagull.obj"},{"label":"Seahorse","value":"slnova_static_files/shapes/animals/seahorse/seahorse.obj"},{"label":"Shark","value":"slnova_static_files/shapes/animals/shark/shark.obj"},{"label":"Tuna","value":"slnova_static_files/shapes/animals/tuna/tuna.obj"},{"label":"Turtle","value":"slnova_static_files/shapes/animals/simpleturtle/simpleturtle.obj"},{"label":"Turtle%202","value":"slnova_static_files/shapes/animals/turtle2/turtle2.obj"},{"label":"Urchin","value":"slnova_static_files/shapes/animals/urchin/urchin.obj"},{"label":"Cone","value":"slnova_static_files/shapes/basic-shapes/cone/cone.obj"},{"label":"Cube","value":"slnova_static_files/shapes/basic-shapes/cube/cube.obj"},{"label":"Cylinder","value":"slnova_static_files/shapes/basic-shapes/cylinder/cylinder.obj"},{"label":"Diamond","value":"slnova_static_files/shapes/basic-shapes/diamond/diamond.obj"},{"label":"Pyramid","value":"slnova_static_files/shapes/basic-shapes/pyramid/pyramid.obj"},{"label":"Sphere","value":"slnova_static_files/shapes/basic-shapes/sphere/sphere.obj"},{"label":"Tetrahedron","value":"slnova_static_files/shapes/basic-shapes/tetrahedron/tetrahedron.obj"},{"label":"Torus","value":"slnova_static_files/shapes/basic-shapes/torus/torus.obj"},{"label":"Castle","value":"slnova_static_files/shapes/buildings/castle/castle.obj"},{"label":"Castle%202","value":"slnova_static_files/shapes/buildings/freecastle/freecastle.obj"},{"label":"Fortress","value":"slnova_static_files/shapes/buildings/fortress/fortress_textured_sketchup.obj"},{"label":"Hospital","value":"slnova_static_files/shapes/buildings/hospital/hospital.obj"},{"label":"House","value":"slnova_static_files/shapes/buildings/house/house.obj"},{"label":"Flower","value":"slnova_static_files/shapes/landscape/flower/flower.obj"},{"label":"Grass","value":"slnova_static_files/shapes/landscape/grass/grass.obj"},{"label":"Kelp","value":"slnova_static_files/shapes/landscape/kelp/kelp.obj"},{"label":"Kelp%202","value":"slnova_static_files/shapes/landscape/kelp/kelp2.obj"},{"label":"Rock","value":"slnova_static_files/shapes/landscape/rock/rock.obj"},{"label":"Rock%202","value":"slnova_static_files/shapes/landscape/rock/rock2.obj"},{"label":"Tree","value":"slnova_static_files/shapes/landscape/tree/tree.obj"},{"label":"A","value":"slnova_static_files/shapes/letters/a/a.obj"},{"label":"B","value":"slnova_static_files/shapes/letters/b/b.obj"},{"label":"C","value":"slnova_static_files/shapes/letters/c/c.obj"},{"label":"D","value":"slnova_static_files/shapes/letters/d/d.obj"},{"label":"E","value":"slnova_static_files/shapes/letters/e/e.obj"},{"label":"F","value":"slnova_static_files/shapes/letters/f/f.obj"},{"label":"G","value":"slnova_static_files/shapes/letters/g/g.obj"},{"label":"H","value":"slnova_static_files/shapes/letters/h/h.obj"},{"label":"I","value":"slnova_static_files/shapes/letters/i/i.obj"},{"label":"J","value":"slnova_static_files/shapes/letters/j/j.obj"},{"label":"K","value":"slnova_static_files/shapes/letters/k/k.obj"},{"label":"L","value":"slnova_static_files/shapes/letters/l/l.obj"},{"label":"M","value":"slnova_static_files/shapes/letters/m/m.obj"},{"label":"N","value":"slnova_static_files/shapes/letters/n/n.obj"},{"label":"O","value":"slnova_static_files/shapes/letters/o/o.obj"},{"label":"P","value":"slnova_static_files/shapes/letters/p/p.obj"},{"label":"Q","value":"slnova_static_files/shapes/letters/q/q.obj"},{"label":"R","value":"slnova_static_files/shapes/letters/r/r.obj"},{"label":"S","value":"slnova_static_files/shapes/letters/s/s.obj"},{"label":"T","value":"slnova_static_files/shapes/letters/t/t.obj"},{"label":"U","value":"slnova_static_files/shapes/letters/u/u.obj"},{"label":"V","value":"slnova_static_files/shapes/letters/v/v.obj"},{"label":"W","value":"slnova_static_files/shapes/letters/w/w.obj"},{"label":"X","value":"slnova_static_files/shapes/letters/x/x.obj"},{"label":"Y","value":"slnova_static_files/shapes/letters/y/y.obj"},{"label":"Z","value":"slnova_static_files/shapes/letters/z/z.obj"},{"label":"0","value":"slnova_static_files/shapes/numbers/0/0.obj"},{"label":"1","value":"slnova_static_files/shapes/numbers/1/1.obj"},{"label":"2","value":"slnova_static_files/shapes/numbers/2/2.obj"},{"label":"3","value":"slnova_static_files/shapes/numbers/3/3.obj"},{"label":"4","value":"slnova_static_files/shapes/numbers/4/4.obj"},{"label":"5","value":"slnova_static_files/shapes/numbers/5/5.obj"},{"label":"6","value":"slnova_static_files/shapes/numbers/6/6.obj"},{"label":"7","value":"slnova_static_files/shapes/numbers/7/7.obj"},{"label":"8","value":"slnova_static_files/shapes/numbers/8/8.obj"},{"label":"9","value":"slnova_static_files/shapes/numbers/9/9.obj"},{"label":"Carrot","value":"slnova_static_files/shapes/objects/carrot/carrot.obj"},{"label":"Coin","value":"slnova_static_files/shapes/objects/coin/coin-silver.obj"},{"label":"Coin%202","value":"slnova_static_files/shapes/objects/coin/coin2.obj"},{"label":"Earth","value":"slnova_static_files/shapes/objects/earth/earth.obj"},{"label":"Earth%202","value":"slnova_static_files/shapes/objects/earthclouds/earthclouds.obj"},{"label":"Enzyme","value":"slnova_static_files/shapes/objects/enzyme/enzyme.obj"},{"label":"Fireball","value":"slnova_static_files/shapes/objects/fireball/fireball.obj"},{"label":"Fireball%202","value":"slnova_static_files/shapes/objects/fireball2/fireball.obj"},{"label":"Fireball%203","value":"slnova_static_files/shapes/objects/fireball2/fireball2.obj"},{"label":"Gem","value":"slnova_static_files/shapes/objects/gem/gem.obj"},{"label":"Hydrant","value":"slnova_static_files/shapes/objects/hydrant/hydrant.obj"},{"label":"Moon","value":"slnova_static_files/shapes/objects/moon/moon.obj"},{"label":"Phospholipid","value":"slnova_static_files/shapes/objects/phospholipid/phospholipid.obj"},{"label":"Star","value":"slnova_static_files/shapes/objects/star/star.obj"},{"label":"Starch%20Molecule","value":"slnova_static_files/shapes/objects/starch-molecule/starch-molecule.obj"},{"label":"Water%20Molecule","value":"slnova_static_files/shapes/objects/water-molecule/water-molecule.obj"},{"label":"Fireman","value":"slnova_static_files/shapes/people/fireman/fireman.obj"},{"label":"Boat","value":"slnova_static_files/shapes/vehicles/boat/boat.obj"},{"label":"Helicopter","value":"slnova_static_files/shapes/vehicles/helicopter/helicopter.obj"},{"label":"Lambo","value":"slnova_static_files/shapes/vehicles/lambo/lambo.obj"},{"label":"Plane","value":"slnova_static_files/shapes/vehicles/plane/plane.obj"},{"label":"Spaceship%201","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship1.obj"},{"label":"Spaceship%202","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship2.obj"},{"label":"Train","value":"slnova_static_files/shapes/vehicles/train/train.obj"},{"label":"Truck","value":"slnova_static_files/shapes/vehicles/truck/truck.obj"},{"label":"Wooden%20Train","value":"slnova_static_files/shapes/vehicles/train_wood/train_wood.obj"}],"value":"slnova_static_files/shapes/animals/clownfish/clownfish.obj"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"19", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"size"},{"name":"toValue","dataType":"string","socketType":"internal","value":"5"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "20"}]}, {"id":"20", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"Strength%20of%20fish"},{"name":"toValue","dataType":"string","socketType":"internal","value":"100"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[]}, {"id":"21", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"}],"value":"Cantidad inicial de peces"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"22", "spec":{"name":"agt-create-do","label":"create @arg0 @breed (s) \n do \n @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "23"},{"socket": "2", "id": "24"},{"socket": "after", "id": "25"}]}, {"id":"23", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"}],"value":"Cantidad inicial de algas"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"24", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"shape"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "26"},{"socket": "after", "id": "27"}]}, {"id":"25", "spec":{"name":"wgt-hide","label":"hide @argList","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Peces","value":"Peces"},{"label":"Población de peces y algas","value":"Población de peces y algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Ejecutar","value":"Ejecutar"},{"label":"Score","value":"Score"},{"label":"setear","value":"setear"}],"value":"Min%20Algas"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "31"}]}, {"id":"26", "spec":{"name":"shape-options","label":"built-in shape: @shapeList","arguments":[{"name":"shapeList","dataType":"none","socketType":"list","options":[{"label":"Sphere","value":"Sphere"},{"label":"Pyramid","value":"Pyramid"},{"label":"Cube","value":"Cube"},{"label":"Angelfish","value":"slnova_static_files/shapes/animals/angel-fish/angel-fish.obj"},{"label":"Bear","value":"slnova_static_files/shapes/animals/bear/bear.obj"},{"label":"Clownfish","value":"slnova_static_files/shapes/animals/clownfish/clownfish.obj"},{"label":"Clownfish%202","value":"slnova_static_files/shapes/animals/clownfish-hi-res/clownfish-hi-res.obj"},{"label":"Dog","value":"slnova_static_files/shapes/animals/dog/dog.obj"},{"label":"Dragon","value":"slnova_static_files/shapes/animals/dragon/dragon.obj"},{"label":"Elephant","value":"slnova_static_files/shapes/animals/elephant/elephant.obj"},{"label":"Giraffe","value":"slnova_static_files/shapes/animals/giraffe/giraffe.obj"},{"label":"Killer%20Whale","value":"slnova_static_files/shapes/animals/killer-whale/killer-whale.obj"},{"label":"Lion","value":"slnova_static_files/shapes/animals/lion/lion.obj"},{"label":"Lioness","value":"slnova_static_files/shapes/animals/lioness/lioness.obj"},{"label":"Manta%20Ray","value":"slnova_static_files/shapes/animals/mantaray/mantaray.obj"},{"label":"Otter%201","value":"slnova_static_files/shapes/animals/otter/otter-float.obj"},{"label":"Otter%202","value":"slnova_static_files/shapes/animals/otter/otter-stand.obj"},{"label":"Penguin","value":"slnova_static_files/shapes/animals/penguin/penguin.obj"},{"label":"Raccoon","value":"slnova_static_files/shapes/animals/raccoon/raccoon.obj"},{"label":"Sea%20Turtle","value":"slnova_static_files/shapes/animals/sea-turtle/sea-turtle.obj"},{"label":"Seagull","value":"slnova_static_files/shapes/animals/seagull/seagull.obj"},{"label":"Seahorse","value":"slnova_static_files/shapes/animals/seahorse/seahorse.obj"},{"label":"Shark","value":"slnova_static_files/shapes/animals/shark/shark.obj"},{"label":"Tuna","value":"slnova_static_files/shapes/animals/tuna/tuna.obj"},{"label":"Turtle","value":"slnova_static_files/shapes/animals/simpleturtle/simpleturtle.obj"},{"label":"Turtle%202","value":"slnova_static_files/shapes/animals/turtle2/turtle2.obj"},{"label":"Urchin","value":"slnova_static_files/shapes/animals/urchin/urchin.obj"},{"label":"Cone","value":"slnova_static_files/shapes/basic-shapes/cone/cone.obj"},{"label":"Cube","value":"slnova_static_files/shapes/basic-shapes/cube/cube.obj"},{"label":"Cylinder","value":"slnova_static_files/shapes/basic-shapes/cylinder/cylinder.obj"},{"label":"Diamond","value":"slnova_static_files/shapes/basic-shapes/diamond/diamond.obj"},{"label":"Pyramid","value":"slnova_static_files/shapes/basic-shapes/pyramid/pyramid.obj"},{"label":"Sphere","value":"slnova_static_files/shapes/basic-shapes/sphere/sphere.obj"},{"label":"Tetrahedron","value":"slnova_static_files/shapes/basic-shapes/tetrahedron/tetrahedron.obj"},{"label":"Torus","value":"slnova_static_files/shapes/basic-shapes/torus/torus.obj"},{"label":"Castle","value":"slnova_static_files/shapes/buildings/castle/castle.obj"},{"label":"Castle%202","value":"slnova_static_files/shapes/buildings/freecastle/freecastle.obj"},{"label":"Fortress","value":"slnova_static_files/shapes/buildings/fortress/fortress_textured_sketchup.obj"},{"label":"Hospital","value":"slnova_static_files/shapes/buildings/hospital/hospital.obj"},{"label":"House","value":"slnova_static_files/shapes/buildings/house/house.obj"},{"label":"Flower","value":"slnova_static_files/shapes/landscape/flower/flower.obj"},{"label":"Grass","value":"slnova_static_files/shapes/landscape/grass/grass.obj"},{"label":"Kelp","value":"slnova_static_files/shapes/landscape/kelp/kelp.obj"},{"label":"Kelp%202","value":"slnova_static_files/shapes/landscape/kelp/kelp2.obj"},{"label":"Rock","value":"slnova_static_files/shapes/landscape/rock/rock.obj"},{"label":"Rock%202","value":"slnova_static_files/shapes/landscape/rock/rock2.obj"},{"label":"Tree","value":"slnova_static_files/shapes/landscape/tree/tree.obj"},{"label":"A","value":"slnova_static_files/shapes/letters/a/a.obj"},{"label":"B","value":"slnova_static_files/shapes/letters/b/b.obj"},{"label":"C","value":"slnova_static_files/shapes/letters/c/c.obj"},{"label":"D","value":"slnova_static_files/shapes/letters/d/d.obj"},{"label":"E","value":"slnova_static_files/shapes/letters/e/e.obj"},{"label":"F","value":"slnova_static_files/shapes/letters/f/f.obj"},{"label":"G","value":"slnova_static_files/shapes/letters/g/g.obj"},{"label":"H","value":"slnova_static_files/shapes/letters/h/h.obj"},{"label":"I","value":"slnova_static_files/shapes/letters/i/i.obj"},{"label":"J","value":"slnova_static_files/shapes/letters/j/j.obj"},{"label":"K","value":"slnova_static_files/shapes/letters/k/k.obj"},{"label":"L","value":"slnova_static_files/shapes/letters/l/l.obj"},{"label":"M","value":"slnova_static_files/shapes/letters/m/m.obj"},{"label":"N","value":"slnova_static_files/shapes/letters/n/n.obj"},{"label":"O","value":"slnova_static_files/shapes/letters/o/o.obj"},{"label":"P","value":"slnova_static_files/shapes/letters/p/p.obj"},{"label":"Q","value":"slnova_static_files/shapes/letters/q/q.obj"},{"label":"R","value":"slnova_static_files/shapes/letters/r/r.obj"},{"label":"S","value":"slnova_static_files/shapes/letters/s/s.obj"},{"label":"T","value":"slnova_static_files/shapes/letters/t/t.obj"},{"label":"U","value":"slnova_static_files/shapes/letters/u/u.obj"},{"label":"V","value":"slnova_static_files/shapes/letters/v/v.obj"},{"label":"W","value":"slnova_static_files/shapes/letters/w/w.obj"},{"label":"X","value":"slnova_static_files/shapes/letters/x/x.obj"},{"label":"Y","value":"slnova_static_files/shapes/letters/y/y.obj"},{"label":"Z","value":"slnova_static_files/shapes/letters/z/z.obj"},{"label":"0","value":"slnova_static_files/shapes/numbers/0/0.obj"},{"label":"1","value":"slnova_static_files/shapes/numbers/1/1.obj"},{"label":"2","value":"slnova_static_files/shapes/numbers/2/2.obj"},{"label":"3","value":"slnova_static_files/shapes/numbers/3/3.obj"},{"label":"4","value":"slnova_static_files/shapes/numbers/4/4.obj"},{"label":"5","value":"slnova_static_files/shapes/numbers/5/5.obj"},{"label":"6","value":"slnova_static_files/shapes/numbers/6/6.obj"},{"label":"7","value":"slnova_static_files/shapes/numbers/7/7.obj"},{"label":"8","value":"slnova_static_files/shapes/numbers/8/8.obj"},{"label":"9","value":"slnova_static_files/shapes/numbers/9/9.obj"},{"label":"Carrot","value":"slnova_static_files/shapes/objects/carrot/carrot.obj"},{"label":"Coin","value":"slnova_static_files/shapes/objects/coin/coin-silver.obj"},{"label":"Coin%202","value":"slnova_static_files/shapes/objects/coin/coin2.obj"},{"label":"Earth","value":"slnova_static_files/shapes/objects/earth/earth.obj"},{"label":"Earth%202","value":"slnova_static_files/shapes/objects/earthclouds/earthclouds.obj"},{"label":"Enzyme","value":"slnova_static_files/shapes/objects/enzyme/enzyme.obj"},{"label":"Fireball","value":"slnova_static_files/shapes/objects/fireball/fireball.obj"},{"label":"Fireball%202","value":"slnova_static_files/shapes/objects/fireball2/fireball.obj"},{"label":"Fireball%203","value":"slnova_static_files/shapes/objects/fireball2/fireball2.obj"},{"label":"Gem","value":"slnova_static_files/shapes/objects/gem/gem.obj"},{"label":"Hydrant","value":"slnova_static_files/shapes/objects/hydrant/hydrant.obj"},{"label":"Moon","value":"slnova_static_files/shapes/objects/moon/moon.obj"},{"label":"Phospholipid","value":"slnova_static_files/shapes/objects/phospholipid/phospholipid.obj"},{"label":"Star","value":"slnova_static_files/shapes/objects/star/star.obj"},{"label":"Starch%20Molecule","value":"slnova_static_files/shapes/objects/starch-molecule/starch-molecule.obj"},{"label":"Water%20Molecule","value":"slnova_static_files/shapes/objects/water-molecule/water-molecule.obj"},{"label":"Fireman","value":"slnova_static_files/shapes/people/fireman/fireman.obj"},{"label":"Boat","value":"slnova_static_files/shapes/vehicles/boat/boat.obj"},{"label":"Helicopter","value":"slnova_static_files/shapes/vehicles/helicopter/helicopter.obj"},{"label":"Lambo","value":"slnova_static_files/shapes/vehicles/lambo/lambo.obj"},{"label":"Plane","value":"slnova_static_files/shapes/vehicles/plane/plane.obj"},{"label":"Spaceship%201","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship1.obj"},{"label":"Spaceship%202","value":"slnova_static_files/shapes/vehicles/spaceship/spaceship2.obj"},{"label":"Train","value":"slnova_static_files/shapes/vehicles/train/train.obj"},{"label":"Truck","value":"slnova_static_files/shapes/vehicles/truck/truck.obj"},{"label":"Wooden%20Train","value":"slnova_static_files/shapes/vehicles/train_wood/train_wood.obj"}],"value":"slnova_static_files/shapes/basic-shapes/pyramid/pyramid.obj"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"27", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"color"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "28"},{"socket": "after", "id": "29"}]}, {"id":"28", "spec":{"name":"color-options","label":"color: @colorList","arguments":[{"name":"colorList","dataType":"none","socketType":"list","options":[{"label":"random%20color","value":"random_color"},{"label":"black","value":"0x000000"},{"label":"blue","value":"0x0000FF"},{"label":"brown","value":"0xA07050"},{"label":"cyan","value":"0x00FFFF"},{"label":"gray","value":"0x8E8E8E"},{"label":"green","value":"0x51C500"},{"label":"lime","value":"0x00FF00"},{"label":"magenta","value":"0xFF00FF"},{"label":"orange","value":"0xFF5500"},{"label":"pink","value":"0xFF007F"},{"label":"purple","value":"0x7F00FF"},{"label":"red","value":"0xFF0000"},{"label":"sky%20blue","value":"0x007FFF"},{"label":"turquoise","value":"0x00FFC6"},{"label":"white","value":"0xFFFFFF"},{"label":"yellow","value":"0xFFFF00"},{"label":"lime%20green","value":"0x80FF00"}],"value":"0x80FF00"}],"connections":[],"color":"#99CCFF","returnType":"string"}, "connectedblocks":[]}, {"id":"29", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Strength%20of%20fish","value":"Strength%20of%20fish"},{"label":"Strength%20of%20algae","value":"Strength%20of%20algae"},{"label":"x","value":"x"},{"label":"y","value":"y"},{"label":"z","value":"z"},{"label":"heading","value":"heading"},{"label":"color","value":"color"},{"label":"shape","value":"shape"},{"label":"size","value":"size"}],"value":"size"},{"name":"toValue","dataType":"string","socketType":"internal","value":"1"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "30"}]}, {"id":"30", "spec":{"name":"trait-set","label":"set my @setArg to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","value":"Strength%20of%20algae"},{"name":"toValue","dataType":"string","socketType":"internal","value":"100"}],"connections":["before","after"],"color":"#99CCFF","returnType":"command"}, "connectedblocks":[]}, {"id":"31", "spec":{"name":"wgt-hide","label":"hide @argList","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Peces","value":"Peces"},{"label":"Población de peces y algas","value":"Población de peces y algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Ejecutar","value":"Ejecutar"},{"label":"Score","value":"Score"},{"label":"setear","value":"setear"}],"value":"MaxAlgas"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "32"}]}, {"id":"32", "spec":{"name":"wgt-hide","label":"hide @argList","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Peces","value":"Peces"},{"label":"Población de peces y algas","value":"Población de peces y algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Ejecutar","value":"Ejecutar"},{"label":"Score","value":"Score"},{"label":"setear","value":"setear"}],"value":"Score"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "33"}]}, {"id":"33", "spec":{"name":"wgt-hide","label":"hide @argList","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Peces","value":"Peces"},{"label":"Población de peces y algas","value":"Población de peces y algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Ejecutar","value":"Ejecutar"},{"label":"Score","value":"Score"},{"label":"setear","value":"setear"}],"value":"MaxPeces"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "34"}]}, {"id":"34", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"Algas"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "35"},{"socket": "after", "id": "36"}]}, {"id":"35", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"}],"value":"Cantidad inicial de algas"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"36", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"MaxAlgas"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "37"},{"socket": "after", "id": "38"}]}, {"id":"37", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"}],"value":"Cantidad inicial de algas"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"38", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"Min%20Algas"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "39"},{"socket": "after", "id": "40"}]}, {"id":"39", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"}],"value":"Cantidad inicial de algas"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"40", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"MaxPeces"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "41"},{"socket": "after", "id": "42"}]}, {"id":"41", "spec":{"name":"wgt-slider","label":"@sliderValue slider value","arguments":[{"name":"sliderValue","dataType":"none","socketType":"list","options":[{"label":"Tasa de reproducción de algas","value":"Tasa de reproducción de algas"},{"label":"Hambre","value":"Hambre"},{"label":"Cantidad inicial de algas","value":"Cantidad inicial de algas"},{"label":"Cantidad inicial de peces","value":"Cantidad inicial de peces"}],"value":"Cantidad inicial de peces"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"42", "spec":{"name":"scatter-everyone","label":"scatter everyone","arguments":[],"connections":["before","after"],"color":"#CC6633","returnType":"command"}, "connectedblocks":[{"socket": "after", "id": "43"}]}, {"id":"43", "spec":{"name":"clock-set","label":"set clock to @time","arguments":[{"name":"time","dataType":"string","socketType":"internal","value":"0"}],"connections":["before","after"],"color":"#669933","returnType":"command"}, "connectedblocks":[]}, {"id":"44", "spec":{"name":"wgt-button-toggle","label":"while @buttonArg toggled \n @arg1","arguments":[{"name":"buttonArg","dataType":"none","socketType":"list","options":[{"label":"Ejecutar","value":"Ejecutar"}],"value":"Ejecutar"},{"name":"arg1","dataType":"command","socketType":"nested"}],"connections":[],"color":"#99CC66","returnType":"command","position":{"x":549,"y":10}}, "connectedblocks":[{"socket": "1", "id": "45"}]}, {"id":"45", "spec":{"name":"wgt-line-graph","label":"Add data to line graph @nameArg for @seriesArg \n    x-axis : @xValue         y-axis : @yValue","arguments":[{"name":"nameArg","dataType":"none","socketType":"list","options":[{"label":"Población de peces y algas","value":"Población de peces y algas"}],"value":"Población de peces y algas"},{"name":"seriesArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"}],"value":"Peces"},{"name":"xValue","dataType":"string","socketType":"internal"},{"name":"yValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "2", "id": "46"},{"socket": "3", "id": "47"},{"socket": "after", "id": "48"}]}, {"id":"46", "spec":{"name":"clock","label":"clock","arguments":[],"connections":[],"color":"#669933","returnType":"string"}, "connectedblocks":[]}, {"id":"47", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Peces"},{"name":"steps","dataType":"string","socketType":"internal","value":"200"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"48", "spec":{"name":"wgt-line-graph","label":"Add data to line graph @nameArg for @seriesArg \n    x-axis : @xValue        n y-axis : @yValue","arguments":[{"name":"nameArg","dataType":"none","socketType":"list","options":[{"label":"Población%20de%20Peces%20y%20Algas","value":"Población de peces y algas"}],"value":"Población de peces y algas"},{"name":"seriesArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"}],"value":"Algas"},{"name":"xValue","dataType":"string","socketType":"internal"},{"name":"yValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "2", "id": "49"},{"socket": "3", "id": "50"},{"socket": "after", "id": "51"}]}, {"id":"49", "spec":{"name":"clock","label":"clock","arguments":[],"connections":[],"color":"#669933","returnType":"string"}, "connectedblocks":[]}, {"id":"50", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Océano","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"51", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"Peces"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "52"},{"socket": "after", "id": "53"}]}, {"id":"52", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Peces"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"53", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"Algas"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "54"},{"socket": "after", "id": "55"}]}, {"id":"54", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"55", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "56"},{"socket": "1", "id": "57"},{"socket": "after", "id": "58"}]}, {"id":"56", "spec":{"name":"comp-greater-than","label":"@arg0 > @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "59"},{"socket": "1", "id": "60"}]}, {"id":"57", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"MaxAlgas"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "61"}]}, {"id":"58", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "62"},{"socket": "1", "id": "63"},{"socket": "after", "id": "64"}]}, {"id":"59", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"60", "spec":{"name":"wgt-get-text","label":"@argList data box","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"MaxAlgas"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"61", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"62", "spec":{"name":"comp-greater-than","label":"@arg0 > @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "65"},{"socket": "1", "id": "66"}]}, {"id":"63", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"MaxPeces"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "67"}]}, {"id":"64", "spec":{"name":"if","label":"if @test \n @then","arguments":[{"name":"test","dataType":"boolean","socketType":"internal"},{"name":"then","dataType":"command","socketType":"nested"}],"connections":["after","before"],"color":"#F7B634","returnType":"command"}, "connectedblocks":[{"socket": "0", "id": "68"},{"socket": "1", "id": "69"}]}, {"id":"65", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Peces"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"66", "spec":{"name":"wgt-get-text","label":"@argList data box","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"MaxPeces"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"67", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Peces"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"68", "spec":{"name":"comp-less-than","label":"@arg0 < @arg1","arguments":[{"name":"arg0","dataType":"string","socketType":"internal"},{"name":"arg1","dataType":"string","socketType":"internal"}],"connections":[],"color":"#F7B634","returnType":"boolean"}, "connectedblocks":[{"socket": "0", "id": "70"},{"socket": "1", "id": "71"}]}, {"id":"69", "spec":{"name":"wgt-set-text","label":"set @setArg data box to @toValue","arguments":[{"name":"setArg","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"Min%20Algas"},{"name":"toValue","dataType":"string","socketType":"internal"}],"connections":["before","after"],"color":"#99CC66","returnType":"command"}, "connectedblocks":[{"socket": "1", "id": "72"}]}, {"id":"70", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}, {"id":"71", "spec":{"name":"wgt-get-text","label":"@argList data box","arguments":[{"name":"argList","dataType":"none","socketType":"list","options":[{"label":"Algas","value":"Algas"},{"label":"Peces","value":"Peces"},{"label":"MaxAlgas","value":"MaxAlgas"},{"label":"MaxPeces","value":"MaxPeces"},{"label":"Min%20Algas","value":"Min%20Algas"},{"label":"Score","value":"Score"}],"value":"Min%20Algas"}],"connections":[],"color":"#99CC66","returnType":"string"}, "connectedblocks":[]}, {"id":"72", "spec":{"name":"count","label":"count @breed within @steps steps","arguments":[{"name":"breed","dataType":"none","socketType":"list","options":[{"label":"Peces","value":"Peces"},{"label":"Algas","value":"Algas"},{"label":"Ocean","value":"Ocean"}],"value":"Algas"},{"name":"steps","dataType":"string","socketType":"internal","value":"150"}],"connections":[],"color":"#999999","returnType":"string"}, "connectedblocks":[]}]}],"sounds":{}};
+    //********************************************************
+
+    </script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/three.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/stats.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/OrbitControls.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/MTLLoader.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/StarlogoLoader.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/OBJMTLLoader.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/OBJLoader.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/lib/ColladaLoader.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/weblogo_canvas2D/ModelManager2D.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/weblogo_canvas2D/Model2D.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/weblogo_canvas2D/ModelLoader2D.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/weblogo_canvas2D/Camera2D.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/ShapeModel.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/FileModel.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/Terrain.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/weblogo_canvas2D/Viewport2D.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/software_renderer/SoftRenderer.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/model_viewer/SoftModelViewer.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/model_viewer/kZip-master/filesaver.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/model_viewer/kZip-master/jszip.min.js"></script>
+    <script type="application/javascript" src="slnova_static_files/weblogo_threejs/model_viewer/kZip-master/slzip.js"></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div id="toolbar" class="navbar navbar-inverse navbar-fixed-top" role="navigation"><span id="logo"><a href="http://54.166.21.191"><img src="slnova_static_files/images/FireballTurtle.png" style="width: 65px;" /></a><a href="http://54.166.21.191"><img src="slnova_static_files/images/logocurve.png" style="width: 100px;vertical-align: -50%;" /></a></span>
+            <div class="navbar-inner">
+                <ul class="nav navbar-nav">
+                    <li id="home"><a href="http://54.166.21.191">Inicio</a></li>
+                    <li id="newProjectLi" style="display:none"><a href="javascript:void(0);">Nuevo proyecto</a></li>
+                    <li id="remixLi" style="display:none"><a href="javascript:void(0);" id="remixBtn"> Remix </a></li>
+                    <li id="checkpointLi" style="display:none"><a href="javascript:void(0);" id="checkpointBtn"> Guardar Versión </a></li>
+                    <li id="manualAuto" style="display:none">
+                        <a href="javascript:void(0);" id="manualAutoBtn" class="disabledNavBarLi">
+                            <div id="saveJSONBtn"> Guardado </div>
+                        </a>
+                    </li>
+                    <li style="padding-left:10px;"><a href="javascript:void(0);" > </a></li>
+                    <li id="runLi"><a href="javascript:void(0);" id="runBtn"> Ejecutar código </a></li>
+                    <li style="padding-left:10px;"><a href="javascript:void(0);" > </a></li>
+                    <li id="viewLi"><a onclick="return toggleMode();" id="viewBtn"> Modo Vista </a></li>
+                    <li id="editLi"><a onclick="return toggleMode();" id="editBtn"> Modo Edición </a></li>
+                    <li id="statusBarLi"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="project_info">
+        <div id="info" class="row-fluid">
+            <div class="col-xs-6 col-md-4">
+                <input type="text" id="id_title" onChange="updateTitle();" value="Interacción de un consumidor" style="width:95%">
+                <div>
+                    <textarea id="d" rows=11 cols=50 onChange="updateDescription();"></textarea>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="row-fluid" style="position: relative; width:100%;">
+        <div id="wcontainer">
+            <div id="container" style="height: 600px;">
+                <div id="speedSlider">
+                    Velocidad de ejecución:
+                    <span id="speedSliderValue">5</span>
+                    <input id="slider" type="range" min="1" value="5" list="steplist" oninput="changeSpeedSlider();" onchange="changeSpeedSlider();">
+                    <datalist id="steplist">
+                        <option>1</option>
+                        <option>5</option>
+                        <option>60</option>
+                    </datalist>
+                    <button id="speedSliderButton" onclick="togglePlay();">ll</button>
+                </div>
+            </div>
+            <div class="span12" id="blockWS"></div>
+        </div>
+        <div id="popUpSquare" style="display:block">
+            <div id="turtle">
+                <a href="dummydomain"><img src="slnova_static_files/images/FireballTurtle.png" style="width:36px" /><img src="slnova_static_files/images/logocurve.png" style="width:100px; vertical-align: -50%;"></a>
+            </div>
+            <div id="pwidget">
+                <div id="loading" align="center" style="color: #FFFFFF;"><b>Cargando...</b></div>
+                <div id="progressbar">
+                    <div id="indicator">
+                        <script type="application/javascript">
+                            window.onload = prog;
+                        </script>
+                    </div>
+                </div>
+                <div id="progressnum" style="color: #FFFFFF;">0%</div>
+            </div>
+        </div>
+        <!--<input type="button" name="Submit" value="Start the progression"
+    onclick="itv = setInterval(prog, 100)" /><input type="button" name="Submit" value="Stop"
+     onclick="clearInterval(itv)" /> -->
+        <!-- <progress id = "progressBar" value="50%" max="200">50%</progress> -->
+        <div id="blanket" style="display:block;position: fixed"></div>
+        <div id='popUpBox' style='display:none'></div>
+        <div id='popUpBoxLarge' style='display:none'></div>
+        <div id="selectProjectTypeDiv" style="display:none;">
+            <center>
+                Elegir el tipo de proyecto para empezar:
+            </center>
+            <br />
+            <input type="radio" name="project" value="blank" /> Proyecto en blanco
+            <br />
+            <input type="radio" name="project" value="action" /> Juego de acción en primera persona
+            <br />
+            <input type="radio" name="project" value="biology" /> Simulación de Biología
+            <br />
+            <center>
+                <button id="projectTypeBtn" onclick="create();">
+                    Enviar
+                </button>
+            </center>
+            <button id="projectTypeBtn" onclick="popup('selectProjectTypeDiv');">
+                Cancelar
+            </button>
+        </div>
+    </div>
+    <div id="shapeManager" class="assetPopUpWindow" style="display:none;height:500px;width:725px;border-radius:5px;padding-right:0px;">
+        <link type="text/css" href="slnova_static_files/style/assets.css" rel="stylesheet" media="screen" />
+        <div id="closeAssetManager">
+            <button class="closePopUp" onclick="popup('shapeManager');"><a>x</a></button>
+        </div>
+        <script>
+            var popupSoundManager = function() {
+                popup('soundManager');
+                Howler.unload();
+                AssetManager.clearSounds();
+            };
+        </script>
+        <div id="assetSearch" class="assetDiv" style="height:460px;width:440px;">
+            <h3 class="asset-header">Buscar Figuras</h3>
+            <div class="input-group" id="search-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:110px" id="selector-btn"><span id="selection" class="pull-left">All Assets</span><span class="caret pull-right" style="margin-top: 7px"></span></button>
+                    <ul class="dropdown-menu" id="selector" style="min-width:auto!important;">
+                        <li><a href="#">Todos los recursos</a></li>
+                        <li><a href="#">Modelos 3D</a></li>
+                        <li><a href="#">Etiquetas</a></li>
+                    </ul>
+                </div>
+                <select name="category" id="category_select" class="form-control" style="display:none;">
+                    <option value="Todos los recursos">All Assets</option>
+                    <option value="Modelos 3">3D Models</option>
+                    <option value="Etiquetas">Tags</option>
+                </select><span class="glyphicon glyphicon-search" id="search-con"></span>
+                <input type="text" style="height:33px !important; width:300px; margin-right: 5px;padding:6px 32px !important; border: 1px solid #ccc !important" name="q" class="form-control" placeholder="Search" id="inp-search">
+            </div>
+            <script type="text/javascript">
+                $('#selector li').click(function(e) {
+                    e.preventDefault();
+                    var s = $(this).text();
+                    $('#category_select').val(s);
+                    $("#selection").html(s);
+                });
+
+                $(function() {
+                    $('#inp-search').blur(function() {
+                            $('#search-con').removeClass("active");
+                        })
+                        .focus(function() {
+                            $('#search-con').addClass("active");
+                        });
+                });
+            </script>
+            <div id="assetsAvailable">
+                <div class="emptySearchResult">
+                    No hay recursos disponibles.
+                </div>
+                <script>
+                    /* When "play" is clicked
+                     * if sound is already loaded, plays sound
+                     * else Howl object is created, sound is played
+                     * 
+                     * if sound is already playing, sound is paused (saves seek)
+                     * sounds stack
+                     */
+                    $(document).ready(function() {
+                        $(document).unbind('click').on('click', ".previewSoundButton", function() {
+                            var assetID = $(this).attr('data-id');
+                            var soundURL = $(this).attr('data-file');
+                            //console.log("sound url", soundURL);
+                            var play = $(this);
+                            var play_status = $(this).html();
+
+                            if (AssetManager.checkSounds(assetID)) {
+                                //console.log("sound is already created");
+                                var sound = AssetManager.getSound(assetID);
+                                if (sound.playing() == true) {
+                                    sound.pause();
+                                    play.html("&#9654;");
+                                } else {
+                                    play.html("ll");
+                                    sound.play();
+                                }
+                            } else {
+                                //console.log("making new sound");
+                                sb.WebLogoDemo.postWith(userUrl + 'loadasset/', JSON.stringify({
+                                    'assetID': assetID
+                                }), function(response, status) {
+                                    var sound = new Howl({
+                                        src: [response],
+                                        onend: function() {
+                                            play.html("&#9654;");
+                                        }
+                                    });
+                                    sound.play();
+                                    AssetManager.addSound(assetID, sound);
+                                    play.html("ll");
+                                });
+                                //console.log("sound that was made", sound);
+                            }
+                        });
+                    });
+                </script>
+                <div id="assetCreate" style="margin:4px 0px 0px 6px;">
+                    <button onclick="popupAsset();" id="assetCreateButton"><a>Subir su propio</a></button>
+                </div>
+                <script>
+                    function popupAsset() {
+                        console.log(document.getElementById('shapeManager'));
+                        if (document.getElementById('shapeManager').style.display == 'block') {
+
+                            // TODO: This needs to be changed once ModelViewer supports software rendering so that createAsset always pops up.
+                            if (render_mode != "3d")
+                                alert("Debe estar en modo 3D para subir figuras.");
+                            else
+                                popup('createAsset', true);
+                        } else {
+                            addSound();
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+        <div id="assetList" class="assetDiv" style="height:460px;width:240px;padding-right:0px;margin-right:0px">
+            <h3 class="asset-header">Figuras en este proyecto</h3>
+            <div id="assetsInProject" style="height:360px;">
+                <div class="emptyListResult">
+                    No hay recursos en este proyecto.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="createAsset" class="assetPopUpWindow" style="display:none;height:500px;width:725px;border-radius:5px;padding:10px">
+        <div id="closeShapeCreate">
+            <button class="closePopUp" onclick="popup('createAsset', true);"><a id="closeShapeCreateButton">&larr;</a></button>
+        </div>
+        <style>
+            .shapeControls {
+                position: absolute;
+            }
+            
+            .loadingModelPopup {
+                font-size: 11px;
+                font-weight: bold;
+                display: none;
+                height: 50px;
+                width: 120px;
+                border-radius: 5px;
+                padding: 5px;
+                background-color: #669933;
+                color: white;
+                text-align: center;
+                top: 45px;
+                left: 30%;
+                position: absolute;
+                z-index: 1000;
+            }
+            
+            #modelprogressbar {
+                width: 102px;
+                background-color: white;
+                border: 1px solid black;
+                height: 10px;
+            }
+            
+            #modelindicator {
+                width: 0px;
+                background-color: #EA7139;
+                height: 8px;
+            }
+            
+            #modelprogressnum {
+                text-align: center;
+                width: 250px;
+            }
+        </style>
+        <h3 class="asset-header">Subir una Figura</h3>
+        <div id="asset-form-inline">
+            <form enctype="multipart/form-data" method="POST" name="assetform" id="assetformid">
+                <input type='hidden' name='csrfmiddlewaretoken' value='yAmpqmIq9nYHi5btX8VwSfUFer0NkFYB' />
+                <center>
+                    Title:
+                    <input type="text" id="asset_title" name="title">
+                    <br>
+                </center>
+                <div style="padding: 15px; width:32%;float:left;" id="shapeFileThumbnail">
+                    File to upload to S3:
+                    <input name="file" type="file" id="asset_file" style="width:200px;">
+                    <br> Miniatura:
+                    <input name="thumbnail" type="file" id="asset_thumbnail" style="width:200px;">
+                </div>
+                <div id="shapePreview" style="float:left; width:38%; height:140px; background-color: black; position: relative;">
+                    <div id="loadingModel" class="loadingModelPopup">
+                        <p id="modelloadinglabel">Cargando...</p>
+                        <div id="modelprogressbar" style="margin: auto;">
+                            <div id="modelindicator"></div>
+                        </div>
+                        <div id="modelprogressnum" style="color: #FFFFFF;display:none">0%</div>
+                    </div>
+                </div>
+                <div id="instructionsAndControls" style="float:left; width:30%; height:140px;padding-left: 15px;"><span style="margin-bottom: 3px;">Controls:</span><span id="buttonHelpMenu" onclick="popup('controlHelpMenu', true);">?</span>
+                    <br>
+                    <div style="position:relative;">
+                        <button class="shapeControls" id="rotateUp" type="button" style="left:30px;top:1px;">&uarr;</button>
+                        <button class="shapeControls" id="enlarge" type="button" style="left:100px;width:25px;top:12px;">+</button>
+                        <button class="shapeControls" id="translateUp" type="button" style="left:140px;width:25px;top:12px;">&#8613;</button>
+                        <div class="shapeControls" style="left:30px;top:26px;width:23px;height:24px;background:linear-gradient(to bottom, #E6E6E6,#F5F5F5, #F5F5F5);"></div>
+                        <button class="shapeControls" id="rotateLeft" type="button" style="left:1px;top:25px;">&larr;</button>
+                        <button class="shapeControls" id="rotateRight" type="button" style="left:52px;top:25px;">&rarr;</button>
+                        <button class="shapeControls" id="rotateDown" type="button" style="top:49px;left:30px;">&darr;</button>
+                        <button class="shapeControls" id="shrink" type="button" style="left:100px;top:36px;width:25px;">-</button>
+                        <button class="shapeControls" id="translateDown" type="button" style="left:140px;top:36px;width:25px;">&#8615;</button>
+                        <button class="shapeControls" id="spinCCW" type="button" style="top:85px;left:16px;">&#8634;</button>
+                        <button class="shapeControls" id="spinCW" type="button" style="top:85px;left:41px;">&#8635;</button>
+                        <button class="shapeControls" id="flipNormals" type="button" style="top:85px;left:118px;">&#128161;</button>
+                    </div>
+                </div>
+                <div style="width:50%;float:left;padding-left:10px" id="assetDescription">
+                    Description:
+                    <br>
+                    <textarea style="width:95%;resize:none;" id="asset_description" rows=6 cols=20 name="description"></textarea>
+                </div>
+                <div style="width:48%;float:left;padding-top:5px;margin: 13px 0px 20px 0px;" id="assetCreator">
+                    Creator:
+                    <input type="text" id="asset_creator" name="creator">
+                    <br> Tags:
+                    <input type="text" id="asset_tags" maxlength="20" name="tags">
+                    <button type="button" id="add_asset_tag">
+                        Add
+                    </button>
+                    <div id="all_asset_tags"></div>
+                </div>
+                <br>
+                <center>
+                    <div id="asset_submit">
+                        <input style="background-color:#669933;" type="submit" value="¡Crear mi recurso!" class="btn btn-lg">
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+    <div id="soundManager" class="assetPopUpWindow" style="display:none;height:500px;width:725px;border-radius:5px;padding-right:0px">
+        <link type="text/css" href="slnova_static_files/style/assets.css" rel="stylesheet" media="screen" />
+        <div id="closeAssetManager">
+            <button class="closePopUp" onclick="popupSoundManager();"><a>x</a></button>
+        </div>
+        <script>
+            var popupSoundManager = function() {
+                popup('soundManager');
+                Howler.unload();
+                AssetManager.clearSounds();
+            };
+        </script>
+        <div id="assetSearch" class="assetDiv" style="height:460px;width:440px;">
+            <h3 class="asset-header">Buscar Sonidos</h3>
+            <div class="input-group" id="search-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="width:110px" id="selector-btn"><span id="selection" class="pull-left">All Assets</span><span class="caret pull-right" style="margin-top: 7px"></span></button>
+                    <ul class="dropdown-menu" id="selector" style="min-width:auto!important;">
+                        <li><a href="#">Todos los recursos</a></li>
+                        <li><a href="#">Modelos 3D</a></li>
+                        <li><a href="#">Etiquetas</a></li>
+                    </ul>
+                </div>
+                <select name="category" id="category_select" class="form-control" style="display:none;">
+                    <option value="Todos los recursos">All Assets</option>
+                    <option value="Modelos 3D">3D Models</option>
+                    <option value="Etiquetas">Tags</option>
+                </select><span class="glyphicon glyphicon-search" id="search-con"></span>
+                <input type="text" style="height:33px !important; width:300px; margin-right: 5px;padding:6px 32px !important; border: 1px solid #ccc !important" name="q" class="form-control" placeholder="Search" id="inp-search">
+            </div>
+            <script type="text/javascript">
+                $('#selector li').click(function(e) {
+                    e.preventDefault();
+                    var s = $(this).text();
+                    $('#category_select').val(s);
+                    $("#selection").html(s);
+                });
+
+                $(function() {
+                    $('#inp-search').blur(function() {
+                            $('#search-con').removeClass("active");
+                        })
+                        .focus(function() {
+                            $('#search-con').addClass("active");
+                        });
+                });
+            </script>
+            <div id="assetsAvailable">
+                <div class="emptySearchResult">
+                    No assets available.
+                </div>
+                <script>
+                    /* When "play" is clicked
+                     * if sound is already loaded, plays sound
+                     * else Howl object is created, sound is played
+                     * 
+                     * if sound is already playing, sound is paused (saves seek)
+                     * sounds stack
+                     */
+                    $(document).ready(function() {
+                        $(document).unbind('click').on('click', ".previewSoundButton", function() {
+                            var assetID = $(this).attr('data-id');
+                            var soundURL = $(this).attr('data-file');
+                            //console.log("sound url", soundURL);
+                            var play = $(this);
+                            var play_status = $(this).html();
+
+                            if (AssetManager.checkSounds(assetID)) {
+                                //console.log("sound is already created");
+                                var sound = AssetManager.getSound(assetID);
+                                if (sound.playing() == true) {
+                                    sound.pause();
+                                    play.html("&#9654;");
+                                } else {
+                                    play.html("ll");
+                                    sound.play();
+                                }
+                            } else {
+                                //console.log("making new sound");
+                                sb.WebLogoDemo.postWith(userUrl + 'loadasset/', JSON.stringify({
+                                    'assetID': assetID
+                                }), function(response, status) {
+                                    var sound = new Howl({
+                                        src: [response],
+                                        onend: function() {
+                                            play.html("&#9654;");
+                                        }
+                                    });
+                                    sound.play();
+                                    AssetManager.addSound(assetID, sound);
+                                    play.html("ll");
+                                });
+                                //console.log("sound that was made", sound);
+                            }
+                        });
+                    });
+                </script>
+                <div id="assetCreate" style="margin:4px 0px 0px 6px;">
+                    <button onclick="popupAsset();" id="assetCreateButton"><a>Subir su propio</a></button>
+                </div>
+                <script>
+                    function popupAsset() {
+                        console.log(document.getElementById('shapeManager'));
+                        if (document.getElementById('shapeManager').style.display == 'block') {
+
+                            // TODO: This needs to be changed once ModelViewer supports software rendering so that createAsset always pops up.
+                            if (render_mode != "3d")
+                                alert("Debe estar en modo 3D para poder subir figuras.");
+                            else
+                                popup('createAsset', true);
+                        } else {
+                            addSound();
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+        <div id="assetList" class="assetDiv" style="height:460px;width:240px;padding-right:0px;margin-right:0px">
+            <h3 class="asset-header">Sonidos en este proyecto</h3>
+            <div id="assetsInProject" style="height:360px;">
+                <div class="emptyListResult">
+                    No assets in this project.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="createSound" class="assetPopUpWindow" style="display:none;height:335px;width:690px;border-radius:5px;padding:10px">
+        <div id="closeSoundCreate">
+            <button class="closePopUp" onclick="toggle_save();"><a id="closeSoundCreateButton">&larr;</a></button>
+        </div>
+        <script>
+            var toggle_save = function() {
+                popup('createSound', true);
+                popup('soundManager', true);
+                if (document.getElementsByClassName('AuO')[0].style.display == "none") {
+                    document.getElementsByClassName('AuO')[0].style.display = "";
+                } else {
+                    document.getElementsByClassName('AuO')[0].style.display = "none";
+                }
+            };
+        </script>
+        <br>
+        <h3 class="asset-header" style="margin-top:-24px;">Guardar sonido</h3>
+        <div id="sound-form-inline">
+            <form enctype="multipart/form-data" method="POST" name="soundform" id="soundformid">
+                <input type='hidden' name='csrfmiddlewaretoken' value='yAmpqmIq9nYHi5btX8VwSfUFer0NkFYB' />
+                <center>
+                    Title:
+                    <input type="text" id="sound_title" name="title" style="width:45%">
+                    <br>
+                </center>
+                <div style="width:50%;float:left;padding:15px 0px 10px 12px">
+                    Thumbnail:
+                    <input name="thumbnail" type="file" id="sound_thumbnail" style="width:60%;display:inline">
+                </div>
+                <div style="padding:10px 0px 0px 7px;width:50%;float:right;">
+                    <audio controls id="soundSource" style='display:inline;'></audio>
+                </div>
+                <div style="width:50%;float:left;padding-left:10px" id="assetDescription">
+                    Description:
+                    <br>
+                    <textarea style="width:95%;resize:none;" id="asset_description" rows=6 cols=20 name="description"></textarea>
+                </div>
+                <div style="width:48%;float:left;padding-top:5px;margin: 13px 0px 20px 0px;" id="assetCreator">
+                    Creator:
+                    <input type="text" id="asset_creator" name="creator">
+                    <br> Tags:
+                    <input type="text" id="sound_tags" maxlength="20" name="tags" style="height:25px;width:195px;">
+                    <button type="button" id="add_sound_tag">
+                        Add
+                    </button>
+                    <div id="all_sound_tags" style="height:40px;margin-top:8px;"></div>
+                </div>
+                <br>
+                <center>
+                    <div id="sound_submit">
+                        <input style="background-color:#669933;" type="submit" value="Create my sound!" class="btn btn-lg" style="margin-top: 5px;">
+                    </div>
+                </center>
+            </form>
+        </div>
+    </div>
+    <div id="loadingAsset" class="assetPopUpWindow" style="display:none;height:50px;width:100px;border-radius:5px;padding-right:0px;background-color:#669933;color:white;">
+        Cargando ...
+    </div>
+    <!--An invisible div for a progress panel indicating progress on loading an asset to be used in spaceland. This div is
+	intended to be cloned and inserted into the document to appear over the rendering canvas. TODO: Might be a good idea to 
+	rework other asset loading bars to use this.-->
+    <style>
+        .loadingPanel {
+            font-size: 11px;
+            font-weight: bold;
+            display: none;
+            height: 50px;
+            width: 120px;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: #669933;
+            color: white;
+            text-align: center;
+            z-index: 1000;
+        }
+        
+        .message {
+            overflow: hidden;
+        }
+        
+        .progressBar {
+            margin: auto;
+            width: 102px;
+            background-color: white;
+            border: 1px solid black;
+            height: 10px;
+        }
+        
+        .barIndicator {
+            width: 0px;
+            background-color: #EA7139;
+            height: 8px;
+        }
+        
+        .panelStack {
+            position: absolute;
+            top: 100px;
+            right: 0;
+            display: none;
+            width: 120px;
+        }
+    </style>
+    <!--Template div for a loading panel. Gets cloned to create new panels at runtime. Can push into a stack or place in the
+	document manually.-->
+    <div id="loadingPanel" class="loadingPanel">
+        <p class="message">Cargando...</p>
+        <!--Message displayed above loading progress bar-->
+        <div class="progressBar">
+            <!--The progress bar itself-->
+            <div id="barIndicator" class="barIndicator"></div>
+        </div>
+    </div>
+    <!--Panel stacks are used to organize loading panels into a vertical stack that can be placed into the document. Stacks are
+	also cloned and placed into the document at runtime.-->
+    <div id="panelStack" class="panelStack"></div>
+    <!--Invisible div that gets replicated to create loading panels over the viewport canvas-->
+    <div id="controlHelpMenu" class="assetPopUpWindow" style="display:none;height:185px;width:490px;border-radius:5px;background-color:black;color:white;overflow:auto;"><span id="closeShapeHelp" onclick="popup('controlHelpMenu', true);">
+	x
+</span><span style="font-size:26px;">Help</span>
+        <hr style="color:red;margin-top:-10px;font-weight:bold;">
+        <p>1. Use the left, right, up, and down arrow keys on the left to orient your model so that it is right-side-up and facing to the right.</p>
+        <p>2. Use the + and - keys to resize your model to what you want it to be at size one. The lattice cube of size 1 is there for reference. Note: Any part of your model sticking out of the cube will not be detected in collisions.</p>
+        <p>3. Use the up and down arrow keys on the right to adjust the position of your model at ground level, with the bottom of the lattice cube being the ground.</p>
+        <p>4. Use the "Flip Lighting" button to make sure that your model appears lit up before submitting.</p>
+    </div>
+    <script type="application/javascript">
+        // adds Everyone and The World pages
+        var loggedIn = 1;
+        var editingOwnProject = 1 /*+""*/ ;
+        var collaborator = 0 /*+""*/ ;
+
+        var userUrl = "dummydomain" + "/djwendel/";
+        var currentRating = 0
+
+
+        var csrfmiddlewaretoken = 'yAmpqmIq9nYHi5btX8VwSfUFer0NkFYB';
+
+        var domain = 'dummydomain';
+        var abs_url = '/djwendel/projects/129051/';
+        var avail_tags = '[]';
+    </script>
+    <script type="application/javascript">
+        win = window;
+        editor = window;
+        
+        // disable autosave timer in offline mode by breaking the means to enable it.
+        sb.WebLogoDemo.startAutoSaveTimer = function(){};
+        
+        // add data reporter code
+        class GameReporter {
+            constructor() {
+               this.uuid = this.getCookie('session_uuid');
+            }
+
+            submitData(data) {
+                var xhr = new XMLHttpRequest();
+
+               // This part gets unplatform's session uuid if available
+               // and creates a json string for the ajax POST. The /appdata/ api
+               // is pretty flexible for the params field. Timestamps are generated
+               // server-side & don't need to be included.
+                var data_string = {}
+               
+               // if you want to test with a session id, you can set
+               // document.cookie = "session_uuid=test"
+                data_string['session_id'] = this.uuid;
+               
+               
+                for (var key in data) {data_string[key] = data[key];};
+               
+               var qbank = { data : data_string }
+               qbank = JSON.stringify(qbank);
+
+                xhr.open('POST', '/api/v1/logging/genericlog', true); // True means async
+               xhr.setRequestHeader("x-api-proxy", this.uuid)
+                xhr.setRequestHeader("Content-Type","application/json");
+                xhr.send(qbank);
+                if (xhr.response != 200) {
+                   var xhr = new XMLHttpRequest();
+                   var unplatform = JSON.stringify(data_string);
+                   xhr.open('POST', '/api/appdata/', true); // True means async
+                   xhr.setRequestHeader("Content-Type","application/json");
+                   xhr.send(unplatform);
+               }
+            };
+           
+           // Generic get cookie function
+            getCookie(cname) {
+                var name = cname + "=";
+                var ca = document.cookie.split(';');
+                for(var i=0; i<ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1);
+                    if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+                }
+               console.log('no uuid found')
+            };
+           
+           // The report function is used to report stateless data. This means reports should include
+           // as much data and relevant metadata as possible. Timestamps are recorded serverside and
+           // are used with reports to reconstruct what students did. Example:
+           // var reporter = new GameReporter(); reporter.report('click', {button_name : 'start'});
+           report(event, params) {
+                   var data = {
+                       // app_name ideally should be get the app's name
+                       // via an environment variable but for now it's hard coded
+                       "app_name": "slnova",
+                       "version": "1.0",
+                       // usually the event that triggrs the action, e.g. go_button_clicked
+                       // this field has a max length of 32 chars
+                       "event_type": event,
+                       // params is the place to dump data related to the event. no max length and
+                       // can include sub objects. this data is stringified in the submit data function.
+                       // ex: params : {level : 2, player_velocity : 30, computer_velocity : 20 }
+                       "params": params,
+                   };
+                   this.submitData(data);
+               }
+        }
+    </script>
+    <footer>
+        <script type="application/javascript" src="slnova_static_files/javascript/viewchanger.js"></script>
+        <div id="footer-wrapper">
+            <div id="footer-about">
+                <div id="turtle-logo">
+                    <img src="slnova_static_files/images/FireballTurtle.png">
+                </div>
+            <div id="footer-links">
+                <div class="footer-info">
+                    <p>
+                        StarLogo Nova es un proyecto del MIT Scheller Teacher Education Program</a></p>
+                </div>
+                <div id="step-logo">
+                    <img src="slnova_static_files/images/step_web_on(bigger).svg" />
+                    <img src="slnova_static_files/images/Clix-logo-grayscale.png" />
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
